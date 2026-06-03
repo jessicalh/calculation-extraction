@@ -1,0 +1,62 @@
+---
+# .clang-tidy — W3 discipline (MSVC terminology).
+#
+# This is a bug detector, not a style police. The ratchet fires only
+# on things we would be foolish to ignore: real bugs, undefined
+# behaviour, dataflow defects, memory unsafety, concurrency hazards.
+# Stylistic checks (readability / modernization / naming / const-
+# correctness on locals / magic-numbers / function-size / braces /
+# member-init-policy / unused-includes) are explicitly OUT of scope.
+#
+# History (2026-05-24): the previous Checks: list enabled every
+# bugprone-/cert-/clang-analyzer-/concurrency-/cppcoreguidelines-/
+# google-/hicpp-/misc-/modernize-/performance-/portability-/readability-
+# family with surgical disables for the worst offenders. Over time the
+# enabled-by-default set drifted into pure style policing, and the
+# baseline ratchet started failing unrelated commits because touching
+# any file resurfaced pre-existing style nits. Replaced with a tight
+# allowlist on user direction: "first principle this should be W3
+# level stuff in ms terms — things we would be foolish not to pay
+# attention to."
+#
+# Run:
+#   scripts/lint/run-clang-tidy.sh            (full sweep)
+#   scripts/lint/run-clang-tidy.sh src/X.cpp  (single TU)
+# Ratchet:
+#   artifacts/quality/baseline.json holds per-file finding counts;
+#   pre-commit hook fails if a changed file's count exceeds baseline.
+
+# Disable everything, then re-enable the W3-equivalent allowlist.
+Checks: >
+  -*,
+  bugprone-*,
+  clang-analyzer-*,
+  concurrency-*,
+  cppcoreguidelines-slicing,
+  cppcoreguidelines-virtual-class-destructor,
+  performance-no-int-to-ptr,
+  performance-unnecessary-value-param,
+  -bugprone-easily-swappable-parameters,
+  -bugprone-narrowing-conversions,
+  -bugprone-implicit-widening-of-multiplication-result,
+  -bugprone-suspicious-include,
+  -clang-analyzer-optin.performance.Padding
+
+# WarningsAsErrors: leave empty. The ratchet is the gate.
+WarningsAsErrors: ""
+
+# Header filter: lint our own headers, not vendored / system / build /
+# downstream UI subprojects.
+HeaderFilterRegex: '/(src|tests|fileformat)/[^/]+\.(h|hpp)$'
+
+FormatStyle: file
+
+CheckOptions:
+  # bugprone-argument-comment: only warn for mismatched comments, not
+  # missing ones (most fn calls don't need /*arg=*/ comments).
+  bugprone-argument-comment.IgnoreSingleArgument: 1
+  bugprone-argument-comment.CommentBoolLiterals: 0
+  bugprone-argument-comment.CommentIntegerLiterals: 0
+
+  # performance-unnecessary-value-param: enforce on large types only.
+  performance-unnecessary-value-param.AllowedTypes: ''

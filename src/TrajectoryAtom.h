@@ -1,0 +1,466 @@
+#pragma once
+//
+// TrajectoryAtom: per-atom trajectory-scope data store. See
+// OBJECT_MODEL.md (trajectory-scope) and PATTERNS.md §13 + Lesson 25.
+// Private constructor; only TrajectoryProtein constructs via friend.
+//
+// Per-Welford state lives in named substructs (one per writer TR)
+// each holding WelfordMoments instances per channel. See
+// spec/plan/welford-data-shape-design-2026-05-17.md for the design
+// rationale. The substruct shape replaced ~136 loose fields of the
+// original pattern; differentiated structure compresses visual
+// surface ~9x without changing memory layout.
+//
+// Phase 2a (2026-05-17): refactor only — existing channels in
+// substructs, behavior unchanged. Phase 2b: per-component T1 / T2,
+// drift / abs / rms delta variants, and schema provenance per the
+// design doc.
+//
+
+#include "AtomEvent.h"
+#include "RecordBag.h"
+#include "TrajectoryMoments.h"  // WelfordMoments
+
+#include <array>
+#include <cstddef>
+
+namespace nmr {
+
+// Per-Welford state struct definitions. Each one bundles the channels
+// owned by a single Welford TR:
+//   - one WelfordMoments per channel
+//   - n_frames + delta_n at struct level (shared across channels)
+//   - Welford state is read by the owning TR's Compute / Finalize /
+//     WriteH5Group and (for BS) by BsAnomalousAtomMarker cross-result
+//     read at PATTERNS §17 marker discipline.
+
+// Written by BsWelfordTrajectoryResult.
+// Source: ConformationAtom::bs_shielding_contribution (SphericalTensor,
+// units = ppm·T/nA per OBJECT_MODEL drift table).
+//
+// Phase 2b expansion (2026-05-17): per-component T1[3] + T2[5] preserve
+// tensor orientation that |T2| amplitude rollup discards; per-channel
+// frame-to-frame delta variants (signed = drift, |Δ| = abs-fluctuation,
+// Δ² → sqrt = RMS fluctuation) distinguish drift from dynamics that
+// the existing t0_delta telescope hides. Per PATTERNS Lesson 25.
+//
+// T1 storage note: SphericalTensor.T1 is stored as the Cartesian
+// Levi-Civita dual of the rank-1 part, NOT in real-spherical-harmonic
+// m-basis. T1[0]=v_x, T1[1]=v_y, T1[2]=v_z. WriteH5Group emits the
+// `irrep_layout_t1 = "v_x,v_y,v_z"` attribute to surface this. A
+// downstream consumer that wants spherical-harmonic m-components
+// must rotate using Cartesian matrices, not real-Y_1m. T2 IS in real-
+// spherical-tesseral m-basis (`irrep_layout_t2 = "m-2,m-1,m0,m+1,m+2"`).
+struct BsWelfordState {
+    // T0 isotropic scalar
+    WelfordMoments t0;
+
+    // T1 rank-1 (G = -n⊗B has T1 = ½(n×B)). Stored as Cartesian LC
+    // dual (T1[0]=v_x, T1[1]=v_y, T1[2]=v_z) — NOT real-spherical-Ym.
+    std::array<WelfordMoments, 3> t1;
+
+    // T2 symmetric traceless; m = -2, -1, 0, +1, +2 (real-spherical-tesseral)
+    std::array<WelfordMoments, 5> t2;
+
+    // |T2| Frobenius L2 amplitude (scalar summary; pairs with per-component t2)
+    WelfordMoments t2magnitude;
+
+    // Frame-to-frame T0 delta variants — four signals distinguished:
+    // - t0_delta: signed Δ. mean = (x_N - x_0)/(N-1) telescopes — drift.
+    // - t0_abs_delta: |Δ|. mean captures total per-frame path length.
+    // - t0_delta_squared: Δ². mean → sqrt at Finalize = RMS fluctuation.
+    // - t0_dxdt: cadence-normalized rate (Δx / Δt in (kernel units)/ps).
+    //   Δ is sample-rate-dependent (stride=2 vs stride=300 gives 150×
+    //   different Δ on identical physics); dxdt is physically meaningful
+    //   across runs of different stride. Use dxdt for dynamics analysis,
+    //   t0_delta for sample-rate-aware drift.
+    WelfordMoments t0_delta;
+    WelfordMoments t0_abs_delta;
+    WelfordMoments t0_delta_squared;
+    WelfordMoments t0_dxdt;
+    double         t0_rms_delta = 0.0;   // sqrt(t0_delta_squared.mean), Finalize-derived
+
+    // Shared denominators
+    std::size_t    n_frames = 0;
+    std::size_t    delta_n  = 0;
+    // Separate count for the t0_dxdt channel — only frames with
+    // dt > MIN_DT_PS contribute a sample. Zero-dt rows (frame
+    // duplication / identical timestamps / stride misconfig) MUST
+    // NOT be zero-filled into the rate accumulator: a bogus 0.0
+    // sample biases the running mean toward zero and inflates the
+    // variance accumulator. Per codex finding 2026-05-18 — must be
+    // tracked separately from the signed/abs/sq delta accumulators
+    // (which legitimately consume every prev_valid_ frame).
+    std::size_t    dxdt_n  = 0;
+};
+
+// Written by HmWelfordTrajectoryResult.
+// Source: hm_shielding_contribution (Å⁻¹, rank-1 same as BS but no
+// PPM_FACTOR multiplier per OBJECT_MODEL drift table).
+// Phase 2b expansion: identical shape to BsWelfordState. T1 storage
+// is Cartesian LC dual (see BsWelfordState comment).
+struct HmWelfordState {
+    WelfordMoments t0;
+    std::array<WelfordMoments, 3> t1;          // Cartesian LC dual; see BsWelfordState
+    std::array<WelfordMoments, 5> t2;          // m = -2..+2 real-spherical-tesseral
+    WelfordMoments t2magnitude;
+    WelfordMoments t0_delta;                   // signed Δ
+    WelfordMoments t0_abs_delta;               // |Δ|
+    WelfordMoments t0_delta_squared;           // Δ²
+    WelfordMoments t0_dxdt;                    // cadence-normalized rate
+    double         t0_rms_delta = 0.0;         // sqrt(<Δ²>), Finalize-derived
+    std::size_t    n_frames = 0;
+    std::size_t    delta_n  = 0;
+    // dxdt-only counter — see BsWelfordState comment. Skips zero-dt
+    // frames rather than zero-filling. Per codex 2026-05-18.
+    std::size_t    dxdt_n  = 0;
+};
+
+// Written by McConnellWelfordTrajectoryResult.
+// Source: mc_shielding_contribution (Å⁻³, full asymmetric non-traceless
+// three-term McConnell form per PATTERNS Lesson 19).
+// CORRECTED 2026-05-17 PM: T1 IS nonzero for McConnell-form per
+// Lesson 19 — the antisymmetric part of M_ab/r³ is
+// (9 cosθ / 2)(d̂_a b̂_b - b̂_a d̂_b) / r³, which is generically nonzero.
+// The earlier "T1=0 by construction" claim in this comment was wrong.
+// Sibling McConnellShieldingTimeSeriesTrajectoryResult emits T1[0..2]
+// from the same source field; the Welford must roll up the same channels.
+// Identical shape to BsWelfordState.
+struct McConnellWelfordState {
+    WelfordMoments t0;
+    // Cartesian LC dual; T1[0]=v_x, T1[1]=v_y, T1[2]=v_z (NOT real-Y_1m).
+    std::array<WelfordMoments, 3> t1;
+    std::array<WelfordMoments, 5> t2;          // m = -2..+2 real-spherical-tesseral
+    WelfordMoments t2magnitude;
+    WelfordMoments t0_delta;
+    WelfordMoments t0_abs_delta;
+    WelfordMoments t0_delta_squared;
+    WelfordMoments t0_dxdt;                    // cadence-normalized rate
+    double         t0_rms_delta = 0.0;
+    std::size_t    n_frames = 0;
+    std::size_t    delta_n  = 0;
+    // dxdt-only counter — see BsWelfordState comment. Skips zero-dt
+    // frames rather than zero-filling. Per codex 2026-05-18.
+    std::size_t    dxdt_n  = 0;
+};
+
+// Written by EeqWelfordTrajectoryResult.
+// Source: eeq_charge (double, elementary_charge).
+// Phase 2b expansion: scalar source — no T1/T2 channels.
+struct EeqWelfordState {
+    WelfordMoments charge;
+    WelfordMoments charge_delta;               // signed Δ
+    WelfordMoments charge_abs_delta;           // |Δ|
+    WelfordMoments charge_delta_squared;       // Δ²
+    WelfordMoments charge_dxdt;                // cadence-normalized Δ/Δt
+    double         charge_rms_delta = 0.0;     // sqrt(<Δ²>), Finalize-derived
+    std::size_t    n_frames = 0;
+    std::size_t    delta_n  = 0;
+    // dxdt-only counter — see BsWelfordState comment. Skips zero-dt
+    // frames rather than zero-filling. Per codex 2026-05-18.
+    std::size_t    dxdt_n  = 0;
+};
+
+// Written by SasaWelfordTrajectoryResult.
+// Source: atom_sasa (double, Å²).
+struct SasaWelfordState {
+    WelfordMoments sasa;
+    WelfordMoments sasa_delta;
+    WelfordMoments sasa_abs_delta;
+    WelfordMoments sasa_delta_squared;
+    WelfordMoments sasa_dxdt;                  // cadence-normalized Δ/Δt
+    double         sasa_rms_delta = 0.0;
+    std::size_t    n_frames = 0;
+    std::size_t    delta_n  = 0;
+    // dxdt-only counter — see BsWelfordState comment. Skips zero-dt
+    // frames rather than zero-filling. Per codex 2026-05-18.
+    std::size_t    dxdt_n  = 0;
+};
+
+// Written by WaterFieldWelfordTrajectoryResult.
+// Source: explicit-water E-field + EFG kernel per
+// `ConformationAtom::water_efield` / `water_efg_spherical` plus the
+// first-shell-only variants. Per-component on Vec3 / tensor channels,
+// scalar Welford + delta variants on the primary rotationally-invariant
+// scalars (E-field magnitude, shell occupancy counts). Two physically-
+// different scales co-exist: total field across the cutoff sphere vs.
+// first-shell-only (< 3.5 Å) — emitting both keeps coupling-distance
+// information for downstream calibration without re-running the fleet.
+//
+// EFG T0 and T1 channels both intentionally absent — structural zeros
+// for water EFG: T0 = (1/3) trace(V) = 0 because WaterFieldResult
+// traceless-projects V_total before SphericalTensor::Decompose;
+// T1 = antisymmetric pseudovector = 0 because water EFG is built from
+// symmetric r⊗r outer products and Types.cpp reads
+// `0.5*(s_ij - s_ji)` on the tensor off-diagonals.
+// Only T2 (symmetric-traceless, 5 components m=-2..+2) carries signal.
+struct WaterFieldWelfordState {
+    // E-field (Vec3, V/Å) per-component + magnitude
+    std::array<WelfordMoments, 3> efield;            // x, y, z
+    WelfordMoments                efield_magnitude;
+    std::array<WelfordMoments, 3> efield_first;      // first-shell-only
+    WelfordMoments                efield_first_magnitude;
+
+    // EFG (SphericalTensor, V/Å²) — T2[5] (real-spherical m=-2..+2) +
+    // |T2| Frobenius magnitude. T0 and T1 are both omitted: T0 is
+    // structurally zero from WaterFieldResult's explicit traceless
+    // projection; T1 is structurally zero because
+    // water EFG is built from symmetric r⊗r outer products
+    // and T1 is the antisymmetric pseudovector component of a rank-2
+    // tensor. Only T2 — the
+    // symmetric-traceless part — carries signal.
+    std::array<WelfordMoments, 5> efg_t2;
+    WelfordMoments                efg_t2magnitude;
+    std::array<WelfordMoments, 5> efg_first_t2;
+    WelfordMoments                efg_first_t2magnitude;
+
+    // Shell-occupancy counts (int, dimensionless)
+    WelfordMoments                n_first;           // count in 0..3.5 Å
+    WelfordMoments                n_second;          // count in 3.5..5.5 Å
+
+    // Delta variants on the primary scalar channels.
+    // efield_magnitude is the rotationally-invariant E-field summary
+    // dynamics question; n_first/n_second deltas are residence-time
+    // proxies. No delta variants on efg_t0 (channel removed) or per-
+    // component E-field/T1/T2 (the magnitude / Frobenius summary
+    // captures dynamics; per-component dynamics is a separate analysis
+    // future-batches can add if calibration shows demand).
+    WelfordMoments efield_magnitude_delta;
+    WelfordMoments efield_magnitude_abs_delta;
+    WelfordMoments efield_magnitude_delta_squared;
+    WelfordMoments efield_magnitude_dxdt;
+    double         efield_magnitude_rms_delta = 0.0;
+
+    WelfordMoments n_first_delta;
+    WelfordMoments n_first_abs_delta;
+    WelfordMoments n_first_delta_squared;
+    WelfordMoments n_first_dxdt;
+    double         n_first_rms_delta = 0.0;
+
+    WelfordMoments n_second_delta;
+    WelfordMoments n_second_abs_delta;
+    WelfordMoments n_second_delta_squared;
+    WelfordMoments n_second_dxdt;
+    double         n_second_rms_delta = 0.0;
+
+    std::size_t    n_frames = 0;
+    std::size_t    delta_n  = 0;
+    // dxdt-only counter — codex 2026-05-18; skips zero-dt frames.
+    std::size_t    dxdt_n   = 0;
+};
+
+// State structs for the HydrationGeometry + HydrationShell Welford TRs.
+// Wired into TrajectoryAtom storage below. Land of forward-declarations
+// originally — those declarations matured into the active structs you
+// see now (commits 6931528 + f15b33a, finalized by R6 codex 2026-05-18
+// adding `ion_present_fraction` + finite-only `nearest_ion_distance`
+// conditional-Welford counters on HydrationShellWelfordState).
+
+// Written by HydrationGeometryWelfordTrajectoryResult.
+// Source: per-atom water polarisation features from HydrationGeometryResult:
+// net dipole vector, surface normal, half-shell asymmetry, dipole alignment,
+// dipole coherence, first-shell count. The alignment/coherence/asymmetry
+// trio IS the polarisation signal — calibration weight on these channels
+// is what we want to learn. Per-component Welford on Vec3 channels;
+// scalar Welford with delta variants on the polarisation scalars.
+struct HydrationGeometryWelfordState {
+    std::array<WelfordMoments, 3> dipole_vector;     // net first-shell water dipole
+    WelfordMoments                dipole_magnitude;  // |Σ dᵢ|
+    std::array<WelfordMoments, 3> surface_normal;    // SASA normal (from sasa_normal)
+
+    WelfordMoments                half_shell_asymmetry;
+    WelfordMoments                dipole_alignment;  // cos(dipole, normal)
+    WelfordMoments                dipole_coherence;  // |Σdᵢ| / n
+    WelfordMoments                shell_count;       // first-shell water O count
+
+    // Delta variants on all four rotationally-invariant scalar channels
+    // (asymmetry, alignment, coherence, shell_count). The Vec3 components
+    // pick up frame-to-frame change implicitly via their per-component
+    // Welford std — no explicit Vec3-component delta tracker needed.
+    // R5 codex 2026-05-18: the previous "polarisation scalars only"
+    // phrasing was wrong — shell_count IS tracked with delta variants
+    // (it's a count, not a polarisation scalar, but the dynamics matter
+    // because shell-occupancy fluctuation is the residence-time proxy).
+    WelfordMoments dipole_alignment_delta;
+    WelfordMoments dipole_alignment_abs_delta;
+    WelfordMoments dipole_alignment_delta_squared;
+    WelfordMoments dipole_alignment_dxdt;
+    double         dipole_alignment_rms_delta = 0.0;
+
+    WelfordMoments dipole_coherence_delta;
+    WelfordMoments dipole_coherence_abs_delta;
+    WelfordMoments dipole_coherence_delta_squared;
+    WelfordMoments dipole_coherence_dxdt;
+    double         dipole_coherence_rms_delta = 0.0;
+
+    WelfordMoments half_shell_asymmetry_delta;
+    WelfordMoments half_shell_asymmetry_abs_delta;
+    WelfordMoments half_shell_asymmetry_delta_squared;
+    WelfordMoments half_shell_asymmetry_dxdt;
+    double         half_shell_asymmetry_rms_delta = 0.0;
+
+    WelfordMoments shell_count_delta;
+    WelfordMoments shell_count_abs_delta;
+    WelfordMoments shell_count_delta_squared;
+    WelfordMoments shell_count_dxdt;
+    double         shell_count_rms_delta = 0.0;
+
+    std::size_t    n_frames = 0;
+    std::size_t    delta_n  = 0;
+    std::size_t    dxdt_n   = 0;
+};
+
+
+// AIMNet2 charge-response gradient: per-atom Welford accumulator for
+// (∂L/∂r_i) where L = Σ_j q_j² (AIMNet2 Hirshfeld charges, e²).
+// Vector emits per-component Welford on a Vec3 (x, y, z, units e²/Å);
+// scalar is the L2 norm of the vector. No delta variants in this
+// initial landing — the AIMNet2 fleet trio's first Welford pair is
+// kept minimum-viable (mean + variance only). If a downstream
+// calibration finding needs dx/dt or rms_delta, add following the
+// HydrationGeometryWelfordState delta-variant pattern.
+struct AIMNet2ChargeResponseGradientWelfordState {
+    std::array<WelfordMoments, 3> charge_response_gradient_vector;  // x, y, z
+    WelfordMoments                charge_response_gradient_scalar;  // L2 norm
+    std::size_t                   n_frames = 0;
+};
+
+// Written by MopacChargeWelfordTrajectoryResult (TR5 of the 13-TR plan).
+// Source: ConformationAtom.mopac_charge (double, Mulliken charge, units e).
+// MopacResult attaches sparsely via TimedAttach in OperationRunner —
+// per-frame HasResult<MopacResult>() gate skips updates on frames
+// where MOPAC didn't run (the "absent, not faked" canonical pattern).
+// Minimum-viable v0: single Welford channel, no delta variants. Add
+// delta variants only if a calibration finding asks for them
+// (mirrors the AIMNet2ChargeResponseGradientWelford v0 precedent).
+struct MopacChargeWelfordState {
+    WelfordMoments charge;     // units e — Mulliken charge
+    std::size_t    n_frames = 0;
+};
+
+// Written by HydrationShellWelfordTrajectoryResult.
+// Source: protein-centroid older sibling of HydrationGeometry —
+// half_shell_asymmetry (centroid reference frame instead of SASA
+// normal), mean_water_dipole_cos, nearest_ion_distance,
+// nearest_ion_charge. All scalar.
+//
+// Nearest-ion conditional Welford (R6 codex 2026-05-18): the source
+// emits `nearest_ion_distance = +infinity` and `nearest_ion_charge = 0.0`
+// when no ion is within `ion_cutoff` (default 20 Å). Naïvely accumulating
+// +inf into the distance Welford NaN-poisons the running mean for any
+// atom that's MIXED contact/no-contact across frames — and most protein
+// atoms ARE mixed at the 20 Å cutoff. The R6 fix:
+//   - nearest_ion_distance Welford ONLY updates on finite samples
+//     (per-atom counter `n_ion_present`)
+//   - delta variants on nearest_ion_distance only update when BOTH the
+//     current and previous frames had finite distance (per-atom counter
+//     `n_ion_delta`); dxdt similarly (`n_ion_dxdt`)
+//   - new channel `ion_present_fraction` is a Welford on the 1.0/0.0
+//     indicator — its mean is the probability that the atom has an ion
+//     in cutoff in any given frame. Conditional Welford + presence
+//     indicator give the actually-meaningful summary.
+struct HydrationShellWelfordState {
+    WelfordMoments half_shell_asymmetry;
+    WelfordMoments mean_water_dipole_cos;
+    WelfordMoments nearest_ion_distance;          // conditional on finite
+    WelfordMoments nearest_ion_charge;
+    // R6: per-atom presence-of-ion-in-cutoff fraction (Welford on
+    // indicator 1.0 when nearest_ion_distance is finite, 0.0 when +inf).
+    // Mean ∈ [0, 1] interpretable as Pr(ion present this frame).
+    WelfordMoments ion_present_fraction;
+
+    WelfordMoments half_shell_asymmetry_delta;
+    WelfordMoments half_shell_asymmetry_abs_delta;
+    WelfordMoments half_shell_asymmetry_delta_squared;
+    WelfordMoments half_shell_asymmetry_dxdt;
+    double         half_shell_asymmetry_rms_delta = 0.0;
+
+    WelfordMoments mean_water_dipole_cos_delta;
+    WelfordMoments mean_water_dipole_cos_abs_delta;
+    WelfordMoments mean_water_dipole_cos_delta_squared;
+    WelfordMoments mean_water_dipole_cos_dxdt;
+    double         mean_water_dipole_cos_rms_delta = 0.0;
+
+    WelfordMoments nearest_ion_distance_delta;
+    WelfordMoments nearest_ion_distance_abs_delta;
+    WelfordMoments nearest_ion_distance_delta_squared;
+    WelfordMoments nearest_ion_distance_dxdt;
+    double         nearest_ion_distance_rms_delta = 0.0;
+
+    WelfordMoments nearest_ion_charge_delta;
+    WelfordMoments nearest_ion_charge_abs_delta;
+    WelfordMoments nearest_ion_charge_delta_squared;
+    WelfordMoments nearest_ion_charge_dxdt;
+    double         nearest_ion_charge_rms_delta = 0.0;
+
+    std::size_t    n_frames = 0;
+    std::size_t    delta_n  = 0;
+    std::size_t    dxdt_n   = 0;
+
+    // R6: per-channel counters for the conditional ion-distance Welford.
+    //   n_ion_present — count of frames where this atom had a finite
+    //                   nearest_ion_distance. Used as the Welford
+    //                   divisor for `nearest_ion_distance` and its
+    //                   ion_present_fraction is over n_frames.
+    //   n_ion_delta   — count of consecutive-finite pairs (both prev
+    //                   AND curr frames had finite distance). Used for
+    //                   the delta/abs_delta/delta_squared Welfords on
+    //                   nearest_ion_distance.
+    //   n_ion_dxdt    — same as n_ion_delta but additionally gated by
+    //                   MIN_DT_PS (zero-dt frames excluded).
+    std::size_t    n_ion_present = 0;
+    std::size_t    n_ion_delta   = 0;
+    std::size_t    n_ion_dxdt    = 0;
+};
+
+// Written by HBondCountWelfordTrajectoryResult.
+// Source: hbond_count_within_3_5A (int, promoted to double).
+// Phase 2b expansion: scalar source + occupancy_fraction companion
+// (Welford on indicator: count > 0 ? 1.0 : 0.0) captures binary
+// participation as a separate physics question from ⟨N⟩ expected count.
+struct HBondCountWelfordState {
+    WelfordMoments count;
+    WelfordMoments count_delta;
+    WelfordMoments count_abs_delta;
+    WelfordMoments count_delta_squared;
+    WelfordMoments count_dxdt;                 // cadence-normalized Δ/Δt
+    double         count_rms_delta = 0.0;
+    WelfordMoments occupancy_fraction;         // Welford on (count > 0 ? 1.0 : 0.0)
+    std::size_t    n_frames = 0;
+    std::size_t    delta_n  = 0;
+    // dxdt-only counter — see BsWelfordState comment. Skips zero-dt
+    // frames rather than zero-filling. Per codex 2026-05-18.
+    std::size_t    dxdt_n  = 0;
+};
+
+
+class TrajectoryProtein;
+
+class TrajectoryAtom {
+    friend class TrajectoryProtein;
+public:
+    // Per-Welford state substructs (one writer per substruct).
+    BsWelfordState                bs_welford;
+    HmWelfordState                hm_welford;
+    McConnellWelfordState         mc_welford;
+    EeqWelfordState               eeq_welford;
+    SasaWelfordState              sasa_welford;
+    HBondCountWelfordState        hbond_count_welford;
+    WaterFieldWelfordState        water_field_welford;
+    HydrationGeometryWelfordState hydration_geometry_welford;
+    HydrationShellWelfordState    hydration_shell_welford;
+    AIMNet2ChargeResponseGradientWelfordState aimnet2_charge_response_gradient_welford;
+    MopacChargeWelfordState       mopac_charge_welford;
+
+    // Pattern C — per-atom event bag.
+    // Push via events.Push({emitter, kind, frame, time, metadata}) from
+    // any TrajectoryResult::Compute or ::Finalize that emits per-atom
+    // events at this atom. Queries are the standard RecordBag verbs.
+    // Used by BsAnomalousAtomMarker (BsAnomalyHighT0 / BsAnomalyLowT0).
+    RecordBag<AtomEvent> events;
+
+private:
+    explicit TrajectoryAtom() = default;
+};
+
+}  // namespace nmr

@@ -1,0 +1,75 @@
+# Test data paths.
+# In-tree fixtures are repo-root-relative (resolved by TestEnvironment
+# against the parent of tests/). External/local fixture roots are either
+# empty when there is no portable default, or point at the conventional
+# repo-relative local path. Override with environment variables or a local
+# NMR_TESTPATHS_TOML file when syncing to a different machine.
+
+# Protonated 1UBQ (in-tree test data)
+ubq_protonated = "tests/data/1ubq_protonated.pdb"
+
+# Unprotonated 1UBQ crystal structure
+ubq_crystal    = "tests/data/external/1UBQ.pdb"
+
+# GROMACS protonated test PDB
+gmx_protonated = "tests/data/external/1OKH_4587_protonated.pdb"
+
+
+# ORCA mutant pair directory (A0A7C5FAR6 WT + ALA)
+orca_dir       = "tests/data/orca/"
+
+# 734 WT+ALA consolidated mutant pairs (year of DFT compute) — external.
+# Override with NMR_CONSOLIDATED_DIR or a local NMR_TESTPATHS_TOML file.
+consolidated   = ""
+
+# fleet_data (CHARMM/XTC fleet/1A6J_5789 + 1AEP_4814) retired 2026-05-04.
+# The two AMBER fixtures (1P9J_5801 + 1Z9B_6577) below replace it.
+
+# AMBER-ff GROMACS straight-relaxation MD trajectories (gitignored).
+# Test set: two proteins (1P9J_5801 and 1Z9B_6577), 1 × 15 ns each at
+# Option B cadence (XTC every 5 ps, TRR positions+velocities every 10 ps,
+# EDR every 1 ps). The same two proteins as the prior fleet's first
+# batch, BMRB-PDB-extracted, with published S² / T1 / T2 NMR relaxation
+# data. Round-3 (2 nm padding) re-runs from 2026-05-01.
+#
+# Each protein dir contains:
+#   sources/                — original PDB, BMRB .str, parsed bmrb_chemistry,
+#                             structure_extracted_*.pdb (the canonical
+#                             reference for atom-name walking, "Authority B"
+#                             per spec/plan/naming-canonical-vocabulary-
+#                             2026-04-30.md). Also pdb_companion_*.pdb
+#                             (original BMRB-deposited PDB).
+#   decisions.json          — chemistry / titration / ion / pH decisions
+#   validator_report.json   — prep validation
+#   prep_run_<TIMESTAMP>/   — em / nvt / npt equilibration, relax_2.0ns,
+#                             topol.top ("Authority A" — rtp comments hold
+#                             canonical AMBER names; e.g. residue 4 of 1P9J
+#                             has ".name=HISH rtp=HIP" — the load-bearing
+#                             test case for NC4 in the canonical-vocabulary
+#                             spec), and the production run subdir.
+fleet_amber    = "tests/data/fleet_amber"
+
+# Per-protein production-trajectory subpath under <fleet_amber>/<id>/.
+# Paths are pinned (no directory discovery / glob — see PATTERNS.md
+# "No file discovery"). Append .tpr / .xtc / .edr at the call site.
+# (Note: the deeply nested timestamped-dir convention is unwieldy but
+# reproducibly identifies each dispatch. Update these subpaths when
+# new MD runs replace them.)
+#
+# Round-3 Option B 15 ns runs (2026-05-01):
+fleet_amber_1p9j_5801_subpath = "1P9J_5801/prep_run_20260501T141627Z/batcave_local_15ns_optB_20260501T144807Z/production"
+fleet_amber_1z9b_6577_subpath = "1Z9B_6577/prep_run_20260501T143103Z/batcave_local_15ns_optB_20260501T144823Z/production"
+
+# ff14SB parameter file (for tests that create their own ChargeSource)
+ff14sb_params  = "data/ff14sb_params.dat"
+
+# AIMNet2 .jpt model. Required by smoke tests so they exercise the
+# AIMNet2 path per project_aimnet2_contract_20260426.
+aimnet2_model  = "data/models/aimnet2_wb97m_0.jpt"
+
+# Baseline NPY features for regression
+baseline_features = "baseline_features/P84477"
+
+# Larsen-archive PM6-D3H+ optimised 1UBQ geometry — external (gitignored).
+# Tests skip when absent. Override with NMR_LARSEN_1UBQ_PM6_PDB.
+larsen_1ubq_pm6_pdb = ""

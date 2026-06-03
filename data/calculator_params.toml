@@ -1,0 +1,122 @@
+# NMR Shielding Calculator Parameters
+# Default values from literature. Calibration pipeline writes optimised values.
+# Flat key = value. Absent key uses compiled default.
+
+# Ring current intensities (nA/T)
+# Giessner-Prettre & Pullman 1969; TRP indole perimeter estimated from component rings
+phe_benzene_ring_current_intensity = -12.0
+tyr_phenol_ring_current_intensity = -11.28
+trp_benzene_ring_current_intensity = -12.48
+trp_pyrrole_ring_current_intensity = -6.72
+his_imidazole_ring_current_intensity = -5.16
+hid_imidazole_ring_current_intensity = -5.16
+hie_imidazole_ring_current_intensity = -5.16
+trp_indole_perimeter_ring_current_intensity = -19.2
+
+# Johnson-Bovey pi-electron lobe offsets above/below ring plane (Angstroms)
+# Johnson & Bovey 1958; TRP indole perimeter estimated
+phe_benzene_jb_lobe_offset = 0.64
+tyr_phenol_jb_lobe_offset = 0.64
+trp_benzene_jb_lobe_offset = 0.64
+trp_pyrrole_jb_lobe_offset = 0.52
+his_imidazole_jb_lobe_offset = 0.50
+hid_imidazole_jb_lobe_offset = 0.50
+hie_imidazole_jb_lobe_offset = 0.50
+trp_indole_perimeter_jb_lobe_offset = 0.60
+
+# Spatial cutoffs — define the reach of each geometric kernel (Angstroms)
+ring_current_spatial_cutoff = 15.0
+mcconnell_bond_anisotropy_cutoff = 10.0
+mopac_mcconnell_bond_anisotropy_cutoff = 10.0
+coulomb_efield_cutoff = 20.0
+hbond_dipolar_max_distance = 50.0
+hbond_counting_radius = 3.5
+dispersion_vertex_distance_cutoff = 5.0
+dispersion_switching_onset_distance = 4.3
+singularity_guard_distance = 0.1
+
+# Ring proximity counting shells (Angstroms)
+ring_proximity_shell_1 = 3.0
+ring_proximity_shell_2 = 5.0
+ring_proximity_shell_3 = 8.0
+ring_proximity_shell_4 = 12.0
+
+# Haigh-Mallion adaptive quadrature subdivision thresholds (Angstroms)
+haigh_mallion_subdivision_threshold_l1 = 2.0
+haigh_mallion_subdivision_threshold_l2 = 1.0
+
+# Guard thresholds — algorithmic boundaries
+efield_magnitude_sanity_clamp = 100.0
+hbond_sequential_exclusion_residues = 2
+near_field_exclusion_ratio = 0.5
+
+# AIMNet2 neural network charge calculator
+# Short-range cutoff read from .jpt model attribute (not overridable here).
+# Long-range DSF Coulomb cutoff (Angstroms) — inf in model default, we use DSF.
+aimnet2_cutoff_lr = 15.0
+# Maximum neighbours per atom in short-range and long-range neighbour matrices.
+aimnet2_max_nb = 128
+aimnet2_max_nb_lr = 4096
+# Coulomb EFG cutoff for AIMNet2 charges (Angstroms)
+aimnet2_coulomb_efg_cutoff = 20.0
+# Charge sensitivity: computed by ChargeSensitivityEvaluator as per-atom
+# charge variance across the ensemble. No parameters — the ensemble IS
+# the perturbation. The old bulk-perturbation params were removed.
+
+# SASA (Shrake-Rupley per-atom solvent-accessible surface area)
+sasa_probe_radius = 1.4
+sasa_n_points = 92
+
+# WaterFieldResult — explicit solvent E-field and EFG from water charges
+# Uses same Coulomb kernel as CoulombResult over TIP3P water charge sites.
+water_efield_cutoff = 15.0
+water_first_shell_cutoff = 3.5
+water_second_shell_cutoff = 5.5
+
+# HydrationShellResult — hydration shell geometry and ion proximity
+# water_first_shell_cutoff is shared with WaterFieldResult (above).
+hydration_ion_cutoff = 20.0
+
+# APBS Poisson-Boltzmann grid sizing + solve conditions (mg-auto convention)
+# Grid points per axis targeting ~0.3-0.5A spacing.
+apbs_grid_dim = 161
+# Fine grid: bbox extent + padding (20A per side), floored at min dimension.
+apbs_fine_padding_A = 40.0
+apbs_fine_min_dim_A = 40.0
+# Coarse grid: fine + padding (boundary condition accuracy).
+apbs_coarse_padding_A = 30.0
+# PB-solve conditions.
+apbs_protein_dielectric = 4.0
+apbs_solvent_dielectric = 78.54
+apbs_temperature_K = 298.15
+apbs_ionic_strength_M = 0.15
+
+# AIMNet2 model file path
+# Set this to the .jpt file to enable neural network charge calculation.
+# Non-silent: if set and the model fails to load, nmr_extract aborts.
+# Relative paths are resolved from this TOML file's directory.
+aimnet2_model_path = "models/aimnet2_wb97m_0.jpt"
+
+# EEQ — Extended Electronegativity Equilibration (Caldeweyher et al. 2019)
+# D4 geometry-dependent charges.  Pure C++/Eigen, no external binary.
+eeq_total_charge = 0
+eeq_cn_steepness = 7.5
+eeq_cn_cutoff = 25.0
+eeq_charge_clamp = 2.0
+
+# 15N relaxation reporting field for ReorientationalDynamics R1/R2/NOE.
+# R1/R2/NOE are field-dependent, so this varies per experiment. 14.1 T = 600 MHz 1H.
+relaxation_field_tesla = 14.1
+
+# Numerical noise floors — below these the value is treated as zero
+near_zero_vector_norm_threshold = 1e-10
+coulomb_charge_noise_floor = 1e-15
+mopac_bond_order_noise_floor = 1e-6
+# Floor on |T2(EFG)| for cosine-similarity well-definedness (TR9
+# MopacVsFf14SbReconciliation, V/Å²). Calibrated to the EFG signal
+# scale; below this the cosine divisor is dominated by FP noise.
+coulomb_efg_t2_magnitude_floor = 1e-3
+biot_savart_wire_endpoint_guard = 1e-25
+biot_savart_wire_axis_guard = 1e-70
+haigh_mallion_triangle_area_guard = 1e-20
+dispersion_switching_noise_floor = 1e-15
