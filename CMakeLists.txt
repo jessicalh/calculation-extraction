@@ -916,9 +916,11 @@ install(FILES
 install(FILES
         data/models/aimnet2_wb97m_0.jpt
     DESTINATION "${NMR_INSTALL_DATA_DIR}/models")
-install(DIRECTORY
-        data/larsen_hbond_grids
-    DESTINATION "${NMR_INSTALL_DATA_DIR}")
+if(EXISTS "${CMAKE_SOURCE_DIR}/data/larsen_hbond_grids")
+    install(DIRECTORY
+            data/larsen_hbond_grids
+        DESTINATION "${NMR_INSTALL_DATA_DIR}")
+endif()
 install(FILES
         config/nmr_tools.toml.example
     DESTINATION "${CMAKE_INSTALL_SYSCONFDIR}/nmr-shielding")
