@@ -16,7 +16,7 @@
 //
 // Global tumbling removed by per-frame Kabsch superposition of the
 // backbone heavy atoms (N/CA/C/O) onto frame 0 (the KabschRotation block
-// is cloned from RmsdTrackingTrajectoryResult, PATTERNS.md 17). The
+// is cloned from RmsdTrackingTrajectoryResult, project conventions 17). The
 // body-frame second-rank TCF gives the internal order parameter and the
 // effective internal correlation time; the lab-frame TCF carries overall
 // tumbling, from which a single global tau_m is estimated with a
@@ -48,7 +48,7 @@
 // Lifecycle: FO. Per vector, two Legendre TCF accumulators (body, lab) and
 // six order-tensor running sums; Finalize derives S^2, tau_e, the
 // orientation tensor, and the global tau_m. Result-owned arrays written
-// directly (no DenseBuffer; codex).
+// directly (no DenseBuffer; review).
 //
 // Emission /trajectory/reorientational_dynamics/ (per vector, V rows):
 //   bond_vector_autocorrelation      (V, L) float64  internal C_I(k), C_I(0)=1
@@ -101,7 +101,7 @@ public:
     }
 
     // No declared dependency: positions and the Residue backbone cache are
-    // present after tp.Seed (PATTERNS.md 15).
+    // present after tp.Seed (project conventions 15).
     std::vector<std::type_index> Dependencies() const override { return {}; }
 
     static std::unique_ptr<ReorientationalDynamicsTrajectoryResult> Create(

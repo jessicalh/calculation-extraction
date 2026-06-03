@@ -47,7 +47,7 @@ readonly NMR_EXTRACT="${NMR_EXTRACT:-${BATCH_NMR_EXTRACT:-${REPO_ROOT}/build/nmr
 # the forbidden timestamp-discovery glob for the rest.) Left as-is pending
 # a decision: retire the script, or re-stem the consolidated data so every
 # pose shares one root. See
-# spec/plan/cleanup-config-cmake-audit-2026-05-25.md (C8).
+# design note (C8).
 
 # ── argument handling ────────────────────────────────────────────────
 if [[ $# -lt 1 ]]; then

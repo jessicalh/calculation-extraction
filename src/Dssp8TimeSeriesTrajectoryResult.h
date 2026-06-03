@@ -12,7 +12,7 @@
 //
 // Conditional-source TR: DsspResult attaches only when
 // PerFrameRunOptions::skip_dssp is false. Per the 2026-05-15
-// conditional-attach discipline (OBJECT_MODEL.md), this TR uses the
+// conditional-attach discipline (object model), this TR uses the
 // source-attached gate -- when no frame had DsspResult attached, the
 // H5 group is skipped entirely. Float data NaN-filled on absent frames;
 // int data (ss8_code, partner indices) uses out-of-range sentinels
@@ -119,7 +119,7 @@ public:
     // Test-only: bypass the per-frame `conf.HasResult<DsspResult>()`
     // check. Used by synthetic unit tests that bypass OperationRunner.
     //
-    // SAFETY (codex review 2026-05-19): When the flag is true, Compute
+    // SAFETY (review review 2026-05-19): When the flag is true, Compute
     // takes the source-attached branch and calls `conf.Result<DsspResult>()`
     // — which THROWS if DsspResult was not actually attached. So the
     // test caller MUST attach DsspResult to every ProteinConformation

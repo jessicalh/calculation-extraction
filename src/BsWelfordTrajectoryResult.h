@@ -13,7 +13,7 @@
 //       read by BsAnomalousAtomMarkerTrajectoryResult during Compute
 //       (anomaly z-score against the running distribution).
 //
-// AV-pattern exemplar (see PATTERNS.md §14 + Lesson 25): Compute()
+// AV-pattern exemplar (see project conventions §14 + Lesson 25): Compute()
 // updates TrajectoryAtom fields in place each frame; mean/m2/min/max
 // are valid after any Compute; std is finalised at end-of-stream
 // (division by n-1 for unbiased variance).

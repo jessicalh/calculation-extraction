@@ -82,8 +82,8 @@ struct TrajectoryMode {
 ///
 /// Single source of truth for the @c production.{tpr,trr,edr} basenames,
 /// which otherwise appear by hand in validation and execution. No
-/// discovery — the names are fixed by convention (see CLAUDE.md mode 5
-/// and PATTERNS.md "No file discovery"); @ref FromProductionDir only
+/// discovery — the names are fixed by convention (see project conventions mode 5
+/// and project conventions "No file discovery"); @ref FromProductionDir only
 /// joins them onto @c dir.
 struct TrajectoryInputFiles {
     std::filesystem::path tpr;  ///< @c {dir}/production.tpr

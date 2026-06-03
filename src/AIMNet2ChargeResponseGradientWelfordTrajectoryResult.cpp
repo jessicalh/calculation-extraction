@@ -122,7 +122,7 @@ void AIMNet2ChargeResponseGradientWelfordTrajectoryResult::WriteH5Group(
     grp.createAttribute("finalized",              finalized_);
     // Group-level units (base channel units). Per-dataset units below
     // distinguish base (mean/std/min/max) from squared (m2) and from
-    // frame_index (min_frame/max_frame) — codex H3 2026-05-20.
+    // frame_index (min_frame/max_frame) — review H3 2026-05-20.
     grp.createAttribute("units_vector",           std::string("e^2/Å"));
     grp.createAttribute("units_scalar",           std::string("e^2/Å"));
     grp.createAttribute("irrep_layout_vector",    std::string("x,y,z"));
@@ -196,7 +196,7 @@ void AIMNet2ChargeResponseGradientWelfordTrajectoryResult::WriteH5Group(
 
     // Per-dataset unit attrs: mean/std/min/max in base units, m2 in
     // squared base units, *_frame in frame_index, n_per_atom in
-    // frame_count. Codex H3 2026-05-20.
+    // frame_count. review H3 2026-05-20.
     const std::string base_v = "e^2/Å";
     const std::string sqr_v  = "(e^2/Å)^2";
     const std::string base_s = "e^2/Å";

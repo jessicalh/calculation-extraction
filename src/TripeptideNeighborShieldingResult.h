@@ -3,7 +3,7 @@
 // TripeptideNeighborShieldingResult: Δσ_BB^{i±1} per Larsen 2015 Eq 3.
 //
 // Larsen 2015 Eq 3 (read directly from
-// references/larsen-2015-procs15-dft-chemical-shift-predictor.pdf p.3):
+// source literature p.3):
 //
 //   Δσ_BB^{i-1}(residue i)
 //     = σ_BB^{i-1}(φ^{i-1}, ψ^{i-1}, χ_1^{i-1}, χ_2^{i-1}, …)

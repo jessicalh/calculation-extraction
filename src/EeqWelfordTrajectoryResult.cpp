@@ -57,7 +57,7 @@ void EeqWelfordTrajectoryResult::Compute(
     const size_t N = tp.AtomCount();
 
     // dxdt uses its OWN counter (eeq_welford.dxdt_n) to skip zero-dt
-    // frames rather than zero-fill them — codex 2026-05-18: zero-fill
+    // frames rather than zero-fill them — review 2026-05-18: zero-fill
     // biases the rate mean toward zero and inflates variance.
     // 1e-12 ps is well below any physical sampling rate.
     constexpr double MIN_DT_PS = 1e-12;
@@ -84,11 +84,11 @@ void EeqWelfordTrajectoryResult::Compute(
             WelfordUpdate(w.charge_delta_squared, delta_sq,  dn_new, frame_idx);
             w.delta_n = dn_new;
 
-            // Cadence-normalized rate (codex HIGH finding 2026-05-17):
+            // Cadence-normalized rate (review HIGH finding 2026-05-17):
             // signed Δ alone is sample-rate dependent. dxdt is physically
             // meaningful across runs of different stride. Uses its own
             // dxdt_n counter — zero-dt frames are SKIPPED, not zero-filled
-            // (codex 2026-05-18: zero-fill biases mean and inflates variance).
+            // (review 2026-05-18: zero-fill biases mean and inflates variance).
             const double dt = time_ps - prev_time_[i];
             if (std::abs(dt) > MIN_DT_PS) {
                 const size_t dxdt_n_new = w.dxdt_n + 1;
@@ -120,7 +120,7 @@ void EeqWelfordTrajectoryResult::Finalize(TrajectoryProtein& tp,
         WelfordFinalize(w.charge_abs_delta,     w.delta_n);
         WelfordFinalize(w.charge_delta_squared, w.delta_n);
         // charge_dxdt is finalised against its OWN counter — only frames
-        // with dt > MIN_DT_PS contributed (codex 2026-05-18). NaN-fills
+        // with dt > MIN_DT_PS contributed (review 2026-05-18). NaN-fills
         // mean/m2/std when n==0, surfacing the all-zero-dt edge case.
         WelfordFinalize(w.charge_dxdt,          w.dxdt_n);
 
@@ -189,7 +189,7 @@ int EeqWelfordTrajectoryResult::WriteFeatures(
 //
 // /trajectory/eeq_welford/ — expanded schema (Phase 2b + Commit C).
 //
-// Codex review (2026-05-17) surfaced four MEDIUM findings closed
+// review review (2026-05-17) surfaced four MEDIUM findings closed
 // here:
 //
 //   (1) Per-dataset `units` attributes are authoritative — the group-
@@ -205,7 +205,7 @@ int EeqWelfordTrajectoryResult::WriteFeatures(
 //       `delta_squared` emit via `emit_1d` (full 7-stat block).
 //       Now routed uniformly via `emit_1d` for shape consistency.
 //
-//   (4) `charge_dxdt_*` channel added — codex HIGH finding: signed Δ
+//   (4) `charge_dxdt_*` channel added — review HIGH finding: signed Δ
 //       is sample-rate dependent (stride=2 vs stride=300 → 150× change
 //       on identical physics); dxdt = Δx/Δt is physically meaningful.
 //
@@ -250,7 +250,7 @@ void EeqWelfordTrajectoryResult::WriteH5Group(
     // carries an exponent (e.g. for the *_delta_squared channel the sample is
     // already squared so m2 needs base^4) or when base is a compound rate unit
     // (e.g. "elementary_charge_per_ps" → m2 must be "elementary_charge^2_per_ps^2"
-    // with the ^2 distributed over each token). Per codex MEDIUM finding
+    // with the ^2 distributed over each token). Per review MEDIUM finding
     // 2026-05-17.
     auto emit_1d = [&](const std::string& prefix,
                        const std::string& base_units,
@@ -313,7 +313,7 @@ void EeqWelfordTrajectoryResult::WriteH5Group(
     dn_ds.createAttribute("units", std::string("frame_count"));
 
     // dxdt_n_per_atom: per-atom count of VALID-dt charge_dxdt samples.
-    // Codex 2026-05-18 — equals delta_n on well-formed trajectories,
+    // review 2026-05-18 — equals delta_n on well-formed trajectories,
     // diverges when zero-dt rows sneak in. Provenance for rate stats.
     auto dxdtn_ds = grp.createDataSet("dxdt_n_per_atom", dxdt_n);
     dxdtn_ds.createAttribute("units", std::string("frame_count"));

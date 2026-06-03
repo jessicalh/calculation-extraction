@@ -45,13 +45,13 @@
 //   rejected because (a) it would duplicate the Kabsch SVD per frame,
 //   which IS expensive at fleet scale, and (b) the semantic coupling
 //   is explicit (this TR's whole purpose depends on the same RMSD
-//   distribution that TR11 produces). See PATTERNS.md §17
+//   distribution that TR11 produces). See project conventions §17
 //   cross-result-read marker discipline.
 //
 //   Note: an earlier draft used TR11's `RmsdAtFrame(frame_idx)` which
 //   silently returned NaN at any stride > 1 (TR11 stores DENSELY by
 //   sample order; `frame_idx` is the original TRR frame index, not a
-//   positional sample index). Codex round 1 2026-05-21 CRITICAL
+//   positional sample index). review round 1 2026-05-21 CRITICAL
 //   finding; fixed via the new `LatestRmsd()` accessor.
 //
 //   Dependencies() returns typeid(RmsdTrackingTrajectoryResult) per

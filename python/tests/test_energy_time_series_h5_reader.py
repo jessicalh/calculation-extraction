@@ -253,7 +253,7 @@ class TestGromacsEnergyTimeSeriesGroup:
         np.testing.assert_allclose(ge.frame_times,      traj.frame_times)
 
     def test_low_energy_selection_safe_pattern(self, h5_with_both_energy):
-        """The user's 2026-05-18 use case + R3 codex F1 NaN-safety.
+        """The user's 2026-05-18 use case + R3 review F1 NaN-safety.
 
         With all frames finite (fixture writes real values), the safe
         pattern selects bottom-N% by total_energy. The pattern itself

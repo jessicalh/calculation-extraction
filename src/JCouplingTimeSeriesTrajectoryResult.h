@@ -62,7 +62,7 @@
 //                     ³J(HN, C') = 4.32·cos²(θ) + 0.84·cos(θ) + 0.00
 //                   Note: B is POSITIVE; J can be slightly negative
 //                   at the vertex (~-0.04 Hz). PRO: NaN (no amide H).
-//                   (Row-mapping fixed 2026-05-20 per codex F1: prior
+//                   (Row-mapping fixed 2026-05-20 per review F1: prior
 //                   bundle attributed row 2 values to this channel.)
 //
 //   J_Halpha_Cprime phi observable via the Hα-Cα-N-C'(prev) dihedral
@@ -76,7 +76,7 @@
 //                     ³J(Hα, C') = 3.75·cos²(θ) + 2.19·cos(θ) + 1.28
 //                   Note: B is POSITIVE. N-terminal residue: NaN (no
 //                   C'(prev)). GLY: uses HA2. (Atom path corrected
-//                   2026-05-20 per codex F2: prior bundle used
+//                   2026-05-20 per review F2: prior bundle used
 //                   HA-Cα-C-N(next), which is rotation around CA-C
 //                   = psi axis, NOT phi.)
 //
@@ -119,7 +119,7 @@
 //   J_Halpha_Hbeta3 As J_Halpha_Hbeta2 but with HB3.
 //
 // All Karplus coefficients live in `PhysicalConstants.h` with full
-// literature citations + reference PDFs in `references/`. All channel
+// literature citations. All channel
 // families are byte-verified against the source PDFs as of 2026-05-19.
 //
 // Static per-residue masks (R,):
@@ -163,7 +163,7 @@
 //
 //   frame_indices, frame_times, source_attached_per_frame (trivially
 //   all-1; positions always present at tp.Seed time —
-//   source_attached_policy="always_attached"). Per OBJECT_MODEL.md
+//   source_attached_policy="always_attached"). Per object model
 //   "Conditional-attach TR discipline (2026-05-15)" canonical-statement
 //   for SDK uniformity.
 //

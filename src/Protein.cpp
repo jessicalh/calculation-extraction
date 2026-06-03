@@ -181,8 +181,8 @@ const CovalentTopology& Protein::BondTopology() const {
 // `BondCategory::PeptideCN` (assigned by CovalentTopology::Resolve).
 // This is the substrate that replaces every
 // ad-hoc chain_id / sequence_number / terminal_state / insertion_code
-// adjacency inference across the calculator surface (see PATTERNS.md
-// and OBJECT_MODEL.md "Backbone connectivity discipline (2026-05-19)").
+// adjacency inference across the calculator surface (see project conventions
+// and object model "Backbone connectivity discipline (2026-05-19)").
 // ─────────────────────────────────────────────────────────────────────
 bool Protein::BackboneConnected(size_t residue_a_idx,
                                  size_t residue_b_idx) const {
@@ -508,7 +508,7 @@ void Protein::FinalizeConstruction(const std::vector<Vec3>& positions,
     // rings (PHE/TYR/HIS-variants/TRP-{benzene,pyrrole,9}) and
     // saturated rings (Pro pyrrolidine) in canonical cyclic walk
     // order. Stub fixtures (empty atom_semantic) get an empty
-    // RingTopology. See spec/plan/ring-investigation-2026-05-06/.
+    // RingTopology.
     auto rings = RingTopology::ConstructFromSubstrate(
         residues_, atom_semantic, *bonds);
 

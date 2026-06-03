@@ -21,7 +21,7 @@
 // rotationally-invariant scalars carry the per-channel-distinct dynamics
 // question. efg_t0 deltas are NOT emitted — T0 is structurally zero.
 //
-// EFG T0+T1 schema rev (2026-05-18 codex F4): water EFG is built from
+// EFG T0+T1 schema rev (2026-05-18 review F4): water EFG is built from
 // symmetric r⊗r outer products and explicitly traceless-projected. After projection
 // T0 = trace = 0; T1 = antisymmetric pseudovector = 0 because the
 // decomposition reads `0.5*(s_ij - s_ji)`, which is bit-exact zero

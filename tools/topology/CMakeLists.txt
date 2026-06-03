@@ -4,7 +4,7 @@
 # Linked against cifpp (CCD reader) and RDKit (CIP labeler, canonical
 # rank, aromatic + hybridisation perception). Reads
 # data/ccd/components.cif, runs reconciliation per the precedence
-# table specified in spec/plan/topology-substrate-implementation-plan-2026-05-05.md,
+# table specified in design note,
 # and emits src/generated/LegacyAmberSemanticTables.cpp plus a
 # structured process log for inspection.
 #

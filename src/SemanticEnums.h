@@ -188,7 +188,7 @@ enum class DiastereotopicIndex : uint8_t {
 // A-X with C' replacing C as the heavier isotope; if B, C', C
 // (away from viewer) are clockwise, C' = pro-R, C = pro-S.
 //
-// The thesis methodology cites "RDKit version 2023.09.6 CIPLabeler"
+// The analysis cites "RDKit version 2023.09.6 CIPLabeler"
 // as the algorithmic source for this field. RDKit is the primary
 // reconciliation source per the project precedence table; Markley
 // Figure 1 marks are the cross-check. Generation-time provenance lives
@@ -738,7 +738,7 @@ struct BondOrderMask {
 // ============================================================================
 //
 // Lists every chemistry-data source contributing to the substrate
-// table. The thesis methodology cites algorithmic sources (RDKit,
+// table. The analysis cites algorithmic sources (RDKit,
 // cifpp/CCD) primarily because they are version-pinned and
 // reproducible.
 //

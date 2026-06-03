@@ -126,7 +126,7 @@ ACCEPTOR_READOUTS = {
     #
     # Per Larsen 2015 Table 2 the 2°HB term lands on N, Cα, C', Hα, HN —
     # all 5 readouts are needed. Without the CA + C readouts (added
-    # 2026-05-12 after codex review) the C' 2°HB contribution (largest
+    # 2026-05-12 after review review) the C' 2°HB contribution (largest
     # per Larsen Table 1, ~2.1 ppm RMSD) was silently zero.
     "NMA": ["N", "CA", "C", "HA", "HN"],
     "HOMe": [],   # Methanol acceptor: no amide group → no 2°HB readouts.

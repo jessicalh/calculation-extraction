@@ -33,7 +33,7 @@
 //     dipole_alignment          (N, T)     float64  cos angle
 //     dipole_coherence          (N, T)     float64  e·Å (|Σd_i|/n_shell —
 //                                                   NOT [0,1] order param,
-//                                                   R6 codex 2026-05-18)
+//                                                   R6 review 2026-05-18)
 //     frame_indices             (T,)       uint64
 //     frame_times               (T,)       float64  ps
 //     source_attached_per_frame (T,)       uint8    1=attached, 0=absent

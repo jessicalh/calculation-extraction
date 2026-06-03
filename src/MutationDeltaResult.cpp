@@ -565,7 +565,7 @@ std::unique_ptr<MutationDeltaResult> MutationDeltaResult::Compute(
 
     // Spatial-NN sanity check on rejections — confirms mechanical-swap
     // structural integrity without the binding criterion depending on
-    // it. This is the intended methodology for thesis prose.
+    // it. This is the intended methodology for analysis prose.
     OperationLog::Info(LogAtomMapping, "MutationDeltaResult::Compute",
         "rejection_spatial_nn"
         " within_0.5A=" + std::to_string(reject_within_0_5) +

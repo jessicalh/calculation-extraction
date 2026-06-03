@@ -40,7 +40,7 @@ void AIMNet2EmbeddingTimeSeriesTrajectoryResult::Compute(
     // a custom config that omits the require could land a zero-default
     // aimnet2_aim. Detect that here and capture mask=0 so the H5
     // records the contract violation rather than silent contamination
-    // (codex review 2026-05-20).
+    // (review review 2026-05-20).
     const bool source_present = conf.HasResult<AIMNet2Result>();
     if (!source_present) {
         OperationLog::Warn(
@@ -121,7 +121,7 @@ void AIMNet2EmbeddingTimeSeriesTrajectoryResult::WriteH5Group(
     // Per-atom hyperslab writes via a per-atom scratch buffer. We avoid
     // a reinterpret_cast over std::vector<std::array<float, D>> because
     // standard library layout for nested-array vectors is not pinned by
-    // the spec (codex review 2026-05-20). Scratch storage is bounded
+    // the spec (review review 2026-05-20). Scratch storage is bounded
     // T*D*4 bytes = 768 KB at 1P9J (T=750, D=256), allocated once and
     // reused across atoms.
     std::vector<float> scratch(T * D);
@@ -144,7 +144,7 @@ void AIMNet2EmbeddingTimeSeriesTrajectoryResult::WriteH5Group(
        .createAttribute("units", std::string("ps"));
 
     // Canonical SDK contract: source_attached_per_frame uint8 per-frame
-    // mask (OBJECT_MODEL.md "Conditional-attach TR discipline"
+    // mask (object model "Conditional-attach TR discipline"
     // subsection). Normally all-1 under the always-attached policy;
     // mask=0 frames captured by Compute's HasResult<AIMNet2Result>()
     // gate would indicate a custom config that omitted the

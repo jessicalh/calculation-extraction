@@ -271,7 +271,7 @@ void HydrationShellWelfordTrajectoryResult::WriteH5Group(
     grp.createAttribute("mean_dt_ps",            mean_dt_ps_);
     grp.createAttribute("frame_index_range",     frame_index_range_);
     grp.createAttribute("reference_frame",       std::string("COM"));
-    // R6 codex 2026-05-18: changed from naive inf-poisoned Welford to
+    // R6 review 2026-05-18: changed from naive inf-poisoned Welford to
     // conditional Welford + presence-of-ion indicator. New semantics:
     grp.createAttribute("nearest_ion_distance_welford_policy",
         std::string("finite_only: only frames with finite "

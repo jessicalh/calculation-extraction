@@ -23,7 +23,7 @@
 //         = 1 - sum_{m in the rest} lambda_m * <i|m>^2     (since M_ii = 1)
 //
 // (Rigid body: internal modes carry no weight -> S^2 -> 1. This is the
-// codex-corrected orientation; the inverse 1 - sum(5 largest) would give
+// review-corrected orientation; the inverse 1 - sum(5 largest) would give
 // S^2 = 0 for a rigid body.) The eigenvalue gap lambda5/lambda6 diagnoses
 // whether the 5-mode overall/internal split is clean.
 //
@@ -67,7 +67,7 @@ public:
     }
 
     // No declared dependency: positions and Residue.N/H are present after
-    // tp.Seed (PATTERNS.md 15).
+    // tp.Seed (project conventions 15).
     std::vector<std::type_index> Dependencies() const override { return {}; }
 
     static std::unique_ptr<IRedOrderParameterTrajectoryResult> Create(

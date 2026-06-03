@@ -27,7 +27,7 @@
 //                                  HasResult<AIMNet2Result>() gate
 //                                  emits NaN-fill + source_attached
 //                                  _per_frame=0 on absent frames
-//                                  (codex review 2026-05-20; "absent,
+//                                  (review review 2026-05-20; "absent,
 //                                  not faked").
 //       optional_large          = true
 //
@@ -81,7 +81,7 @@ private:
     // Per-frame source-attached mask. Always-attached policy means the
     // mask is normally all-1, but a custom config that wires the TR
     // without RequireConformationResult'ing AIMNet2Result would land
-    // mask=0 for those frames (codex review 2026-05-20).
+    // mask=0 for those frames (review review 2026-05-20).
     std::vector<std::uint8_t> source_attached_per_frame_;
     std::size_t n_frames_  = 0;
     bool        finalized_ = false;

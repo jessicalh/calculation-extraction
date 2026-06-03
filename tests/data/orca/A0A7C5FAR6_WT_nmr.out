@@ -175,9 +175,9 @@ interface, adapt or use parts of their codes:
 
   ***********************************
   * Starting time: Fri Mar 27 12:00:49 2026
-  * Host name:     batcave
+  * Host name:     scan-host
   * Process ID:    3914702
-  * Working dir.:  /shared/orca_calibration/results/.orca_tmp_kaKW3e
+  * Working dir.:  /tmp/nmr-shielding-orca
   ***********************************
 
 NOTE: MaxCore=12000 MB was set to SCF,MP2,MDCI,CIPSI,MRCI,RASCI and CIS

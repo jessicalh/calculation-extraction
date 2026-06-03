@@ -8,7 +8,7 @@
 //   - All emitted Mat3 tensors are finite.
 //   - larsen_hbond_n_pairs > 0 on atoms that received contributions.
 //   - larsen_hbond_any_corner_imputed propagates to Table 2 target
-//     atoms (codex C4 fix).
+//     atoms (review C4 fix).
 //   - Cβ diagnostic tensors are finite and bounded — the value reflects
 //     Larsen's actual DFT-computed Cβ shielding (which his Table 2
 //     CHOSE not to include in ProCS15); non-zero is the methodology
@@ -326,7 +326,7 @@ TEST_F(LarsenHBondShieldingTest, GlyHaFanOutHitsBothHA) {
     // The fan-out fix asserts: NO GLY residue should have a partial
     // HA hit. Either neither HA contributes (residue not a donor) or
     // both do (substrate-driven enumeration). A partial hit would be
-    // the codex H1 bug.
+    // the review H1 bug.
     EXPECT_EQ(n_gly_residues_with_partial_ha_hit, 0)
         << "GLY HA fan-out broken: " << n_gly_residues_with_partial_ha_hit
         << " GLY residues have exactly 1 of 2 α-hydrogens contributing";
@@ -340,7 +340,7 @@ TEST_F(LarsenHBondShieldingTest, GlyHaFanOutHitsBothHA) {
 
 // Mass-conservation: every geometric candidate the spatial sweep
 // classified gets accounted for as either a successful pair or a
-// counted skip (codex finding F4, 2026-05-12). No silent drops.
+// counted skip (review finding F4, 2026-05-12). No silent drops.
 //
 // Also: an amide H can legitimately carry BOTH a water term (it had
 // no H-bond candidate as DONOR) AND a non-zero n_pairs (it received
@@ -366,7 +366,7 @@ TEST_F(LarsenHBondShieldingTest, GeometricCandidateMassConservation) {
     // Pairs that reached the grid path and either succeeded or were
     // counted as skipped. The two counts together are the total of
     // geometric candidates the dispatch evaluated — none were silently
-    // dropped (cf. codex F4: missing-frame-atoms early-returns used to
+    // dropped (cf. review F4: missing-frame-atoms early-returns used to
     // bypass the counter).
     const int n_found   = result->PairsFound();
     const int n_skipped = result->PairsGridSkipped();
@@ -456,7 +456,7 @@ TEST_F(LarsenHBondShieldingTest, GridSchemaValidationPassed) {
 }
 
 
-// F1 reality check (codex finding, 2026-05-12): after adding acceptor_CA
+// F1 reality check (review finding, 2026-05-12): after adding acceptor_CA
 // and acceptor_C grid readouts, Cα and C' atoms in residues that are
 // H-bond targets must accumulate Δσ_2°HB contributions. Before F1,
 // Larsen Table 2 said these atoms get 2°HB but the grid lacked the

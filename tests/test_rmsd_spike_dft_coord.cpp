@@ -166,7 +166,7 @@ TEST(RmsdSpikeAndDftCoord, EndToEndOn1P9J) {
 
 // ── TR12: forcing test for the cross-result-read at stride > 1 ─────
 //
-// Codex round 2 2026-05-21 MEDIUM: the EndToEndOn1P9J test above uses
+// review round 2 2026-05-21 MEDIUM: the EndToEndOn1P9J test above uses
 // stride=200 which yields ~8 sampled frames, below the 10-frame
 // rolling-window gate, so it would silently pass at stride > 1 even
 // if the critical round-1 bug (`RmsdAtFrame(frame_idx)` reading off
@@ -203,7 +203,7 @@ TEST(RmsdSpikeAndDftCoord, SpikeFiresAtStrideGreaterThanOne1P9J) {
     // (TR12 silently NaN-skipping every frame) or the threshold is
     // mis-tuned for this fixture.
     EXPECT_GE(tr_spike.SpikeCount(), 1u)
-        << "TR12 produced zero spikes at stride > 1 — codex round 1 "
+        << "TR12 produced zero spikes at stride > 1 — review round 1 "
         << "CRITICAL bug regression check: TR12 must read TR11 via "
         << "`LatestRmsd()`, not the removed `RmsdAtFrame(frame_idx)` "
         << "which silently returned NaN at any stride > 1";
@@ -217,7 +217,7 @@ TEST(RmsdSpikeAndDftCoord, SpikeFiresAtStrideGreaterThanOne1P9J) {
 
 // ── TR13: Finalize idempotency (no duplicate emission on second call) ─
 //
-// Codex round 2 2026-05-21 MEDIUM: TR13's iterator-invalidation fix
+// review round 2 2026-05-21 MEDIUM: TR13's iterator-invalidation fix
 // (round 1 HIGH #2) made the collect-then-push pattern safe but did
 // NOT prevent a second `Finalize()` call from re-collecting the same
 // upstream records and pushing duplicates. This test verifies the

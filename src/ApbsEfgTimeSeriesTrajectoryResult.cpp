@@ -170,7 +170,7 @@ void ApbsEfgTimeSeriesTrajectoryResult::WriteH5Group(
         "in PerFrameExtractionSet (RunConfiguration.cpp:157). Compute's "
         "HasResult<ApbsFieldResult>() gate is defensive and emits "
         "NaN-fill + mask=0 on absent frames per canonical 'absent, "
-        "not faked' (OBJECT_MODEL.md Conditional-attach TR discipline)."));
+        "not faked' (object model Conditional-attach TR discipline)."));
 
     // (N, T, 5) via explicit T2[k] component access. No reinterpret,
     // no struct-packing assumption. Atom-major:

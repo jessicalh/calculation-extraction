@@ -265,7 +265,7 @@ TEST(HmWelford, Integration1P9J) {
     EXPECT_GT(t2_populated, 0u)
         << "HM Welford T2 per-component all-zero — T2 Completeness regression";
 
-    // Codex 2026-05-18: dxdt_n must equal delta_n on a well-formed
+    // review 2026-05-18: dxdt_n must equal delta_n on a well-formed
     // trajectory (no duplicated-timestamp frames). Regression guard
     // for the separate-counter fix that skips zero-dt frames rather
     // than zero-filling the rate accumulator.

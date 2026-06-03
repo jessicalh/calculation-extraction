@@ -4,7 +4,7 @@
 //
 // For each atom, accumulates tensor kernels from DSSP-resolved
 // backbone H-bonds that pass the filter set. Same derivation as
-// McConnell/RingSusceptibility (GEOMETRIC_KERNEL_CATALOGUE.md) with
+// McConnell/RingSusceptibility (geometric kernel catalogue) with
 // b_hat replaced by the donor→acceptor direction h_hat.
 //
 // H-bond identification comes from DsspResult, which provides

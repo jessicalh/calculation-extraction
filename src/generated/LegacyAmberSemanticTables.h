@@ -167,7 +167,7 @@ struct ParsedAtomName {
     /// `is_n_terminus`. The intent-explicit name lets ComposeAtomSemantic
     /// dispatch on `parsed.is_cap_only_n || parsed.is_cap_only_c` instead
     /// of re-reading the atom-name string via IsCapOnlyAtomName(string)
-    /// (codex-review Finding 3 — "parse once, then no string work in
+    /// (review-review Finding 3 — "parse once, then no string work in
     /// composition").
     bool                       is_cap_only_n = false;
     /// Cap-only-CTERM flag: same intent, for OXT/HXT.
@@ -258,7 +258,7 @@ inline ParsedAtomName ParseAtomName(const std::string& name,
     }
     // NOTE: H2N (NTERM amine literal) and OT1/OT2 (CHARMM-style C-term
     // oxygens) were removed 2026-05-06 with the CharmmLegacy cleanup
-    // (codex-review Finding 2). No active load path emits them; if a
+    // (review-review Finding 2). No active load path emits them; if a
     // future CHARMM-input path arises, they belong with a concrete
     // source tag in the canonicalisation rule layer (NamingApplicator),
     // not as silent terminus-flag aliases here.
@@ -378,12 +378,12 @@ ComputeAtomMechanicalIdentity(::nmr::Element element,
 // CTERM_PROTONATED contributes OXT/HXT.
 //
 // History note: H2N / OT1 / OT2 were previously listed here as
-// CHARMM-port alternates; they were removed 2026-05-06 (codex-review
+// CHARMM-port alternates; they were removed 2026-05-06 (review-review
 // Finding 2) — no active load path emits them, the corresponding
 // CharmmLegacy rules had no live emitter, and CHARMM-the-force-field
 // is retired (memory `project_charmm_retired_amber_only_2026-05-02`).
 //
-// Implementation note (codex-review Finding 3): this function is a
+// Implementation note (review-review Finding 3): this function is a
 // THIN WRAPPER around `ParseAtomName` and consumes the typed
 // `is_cap_only_n` / `is_cap_only_c` flags that ParseAtomName already
 // populates in a single pass. Composition consumers (ComposeAtomSemantic)

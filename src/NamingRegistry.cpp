@@ -41,7 +41,7 @@ bool NamingRegistry::ContextKey::operator<(const ContextKey& o) const {
 NamingRegistry::NamingRegistry() {
     InitialiseStandardResidues();
     InitialiseAmberContext();
-    // InitialiseCharmmContext() retired 2026-05-06 (codex D1): no live
+    // InitialiseCharmmContext() retired 2026-05-06 (review D1): no live
     // consumer needed canonical -> CHARMM residue-name emission. CHARMM
     // input names (HSD/HSE/HSP/CYS2/ASPP/GLUP) still parse via
     // ToCanonical() — the standard-residues table seeds those mappings.
@@ -113,7 +113,7 @@ void NamingRegistry::InitialiseAmberContext() {
 }
 
 
-// InitialiseCharmmContext() retired 2026-05-06 (codex Finding D1):
+// InitialiseCharmmContext() retired 2026-05-06 (review Finding D1):
 // CHARMM naming/output support is retired (memory entry
 // `project_charmm_retired_amber_only_2026-05-02`); no live consumer
 // needed canonical -> CHARMM residue-name emission. CHARMM input
@@ -420,7 +420,7 @@ bool NamingApplicator::IsCanonical(const NamingContext& ctx) const {
     if (ctx.input_name.empty()) return true;  // empty -> idempotent
 
     // ------------------------------------------------------------------
-    // Deletion-variant deny overlay (codex Finding F5, 2026-05-06)
+    // Deletion-variant deny overlay (review Finding F5, 2026-05-06)
     //
     // Some protonation variants DELETE atoms that are present in the
     // base AminoAcidType chain inventory. Under the resolved variant
@@ -497,7 +497,7 @@ bool NamingApplicator::IsCanonical(const NamingContext& ctx) const {
     // re-purpose existing chain entries (LYN HZ2/HZ3 are already in
     // LYS chain) — no atom-extension needed.
     //
-    // Variant-aware canonicality (codex-review Finding 5, 2026-05-06):
+    // Variant-aware canonicality (review-review Finding 5, 2026-05-06):
     //
     //   * variant_index == -1 (unresolved at load): accept the UNION of
     //     variant-extension atoms. Loaders see protonation state before
@@ -571,7 +571,7 @@ bool NamingApplicator::IsCanonical(const NamingContext& ctx) const {
             || ctx.input_name == "H3") return true;
     if (ctx.input_name == "OXT" || ctx.input_name == "HXT") return true;
     // H2N / OT1 / OT2 NOT whitelisted: removed 2026-05-06 with the
-    // CharmmLegacy source (codex-review Finding 2). Any reappearance
+    // CharmmLegacy source (review-review Finding 2). Any reappearance
     // of these names from a future load path needs a concrete source
     // tag and a rule, not silent canonicality acceptance.
 
@@ -642,7 +642,7 @@ NamingApplicator::Resolve(const std::vector<NamingApplication>& applications,
     // AmberFf14SBCanonical pass-throughs — the rule sets agree on
     // canonical inputs and the resolver returns the shared output.
     //
-    // Reachability (codex Finding 6, 2026-05-06): the CURRENT
+    // Reachability (review Finding 6, 2026-05-06): the CURRENT
     // production rule set does NOT exercise this branch. Every rule
     // either gates on `ctx.source` (the Pdb2gmxAmberRtpDeviation
     // family) or is a sibling-pattern-specific shift / pass-through
@@ -650,7 +650,7 @@ NamingApplicator::Resolve(const std::vector<NamingApplication>& applications,
     // γ1, ILE γ-carbon). No two of those fire and agree on the same
     // (residue, input, source, sibling) tuple. The branch is
     // exercised in tests/test_naming_registry.cpp::
-    // NamingApplicatorMultiRuleResolve (codex Finding 6) via a
+    // NamingApplicatorMultiRuleResolve (review Finding 6) via a
     // test-only `NamingApplicator(CustomRules)` constructor.
     //
     // Rule sets are preserved as
@@ -714,7 +714,7 @@ NamingApplicator::FailUnresolved(
 // ----------------------------------------------------------------------------
 // FailValidator: post-resolution validator's fail-loud emit.
 //
-// The architectural contract for the rule architecture (codex round-2,
+// The architectural contract for the rule architecture (review round-2,
 // 2026-05-06) is asymmetric:
 //
 //   Applies()  may recognise NON-canonical input (rules exist to repair).
@@ -754,7 +754,7 @@ NamingApplicator::FailValidator(
         "Original input '%s' resolved to '%s' (BAD); residue %s seq %d "
         "chain '%s'; source %s; variant_index=%d; terminal_state=%d. "
         "Rules that fired:%s. "
-        "Architectural contract (codex round-2, 2026-05-06): rules may "
+        "Architectural contract (review round-2, 2026-05-06): rules may "
         "recognise non-canonical INPUT (rules exist to repair) but their "
         "OUTPUT must be canonical for the resolved chemistry context; "
         "the canonicality oracle is the authority on canonical form. "
@@ -775,7 +775,7 @@ NamingApplicator::FailValidator(
 // ----------------------------------------------------------------------------
 // Apply: single-atom canonicalisation. Collect + Resolve.
 //
-// Codex Finding CC2 (2026-05-06): NamingSource::Unknown at entry is a
+// review Finding CC2 (2026-05-06): NamingSource::Unknown at entry is a
 // loader bug. Source-agnostic rules (the LYN HZ shift, the GLY HA
 // collapse, etc.) tagged AmberFf14SBCanonical do not gate on
 // ctx.source; under Unknown they would silently fire and rewrite the
@@ -805,7 +805,7 @@ std::string NamingApplicator::Apply(const NamingContext& ctx) const {
     std::vector<NamingApplication> applications = Collect(ctx);
     std::string output = Resolve(applications, ctx);
 
-    // Architectural contract (codex round-2, 2026-05-06): rules may
+    // Architectural contract (review round-2, 2026-05-06): rules may
     // recognise non-canonical INPUT (rules exist to repair it), but
     // their OUTPUT must be canonical for the resolved chemistry context.
     // The canonicality oracle is the authority on canonical form; this
@@ -819,7 +819,7 @@ std::string NamingApplicator::Apply(const NamingContext& ctx) const {
     // paths fail-loud; either FATAL (unresolved or non-canonical
     // output) is correct rejection of an unsafe canonicalisation.
     //
-    // Preserved after the 2026-05-06 codex round-2 review.
+    // Preserved after the 2026-05-06 review round-2 review.
     NamingContext output_ctx = ctx;
     output_ctx.input_name = output;
     if (!IsCanonical(output_ctx)) {
@@ -894,7 +894,7 @@ std::vector<std::string> NamingApplicator::ApplyResidue(
 //        canonical mappings, project decisions about what the canonical
 //        target should be).
 //
-// Removed 2026-05-06 (codex-review Finding 2): the historic
+// Removed 2026-05-06 (review-review Finding 2): the historic
 // "(Standard, Charmm)" and "(Charmm, Standard)" CHARMM-port collapse
 // rules (HN<->H, OT1<->O, OT2<->OXT) and their CharmmLegacy source
 // tag had no live emitter — neither the fleet_amber TPRs (1Z9B,
@@ -975,7 +975,7 @@ void NamingApplicator::InstallRules() {
 
     // Pass-through for canonical charged LYS (HZ1+HZ2+HZ3 all present).
     //
-    // Variant gate (codex round-2, 2026-05-06): the rule represents
+    // Variant gate (review round-2, 2026-05-06): the rule represents
     // canonical CHARGED LYS chemistry (NH3+, HZ1+HZ2+HZ3 on Nζ). Under
     // resolved LYN (variant_index = 0), the residue is the neutral
     // amine NH2 form whose canonical hydrogens are HZ2+HZ3 only — HZ1
@@ -1072,7 +1072,7 @@ void NamingApplicator::InstallRules() {
     // (siblings already contain HD2+HD3 etc.) do not trigger these rules
     // — the predicate returns false. This makes the rules idempotent.
     //
-    // Reference: h5-reader/notes/nmr_forensics/SUMMARY.md (empirical probe).
+    // Reference: empirical probe notes (empirical probe).
 
     // PRO δ-methylene: pdb2gmx HD1/HD2 → IUPAC HD2/HD3.
     rules_.push_back(NamingRule{

@@ -166,7 +166,7 @@ TEST(StringBarrier, CifppOnlyInAllowListedTranslationUnits) {
            "Allow-listed files: PdbFileReader.cpp, DsspResult.cpp. "
            "Adding a new cifpp consumer requires an architectural "
            "decision -- update CifppAllowList() in this test plus "
-           "the architecture rationale in spec/plan/. Violations:\n"
+           "the architecture rationale. Violations:\n"
         << [&violations]{ std::string s; for (const auto& v : violations) s += v + "\n"; return s; }();
 }
 

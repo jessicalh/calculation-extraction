@@ -202,8 +202,7 @@ nmr::TerminalState CTerminalStateForResidue(const nmr::Residue& res) {
         "  cap_state  = %d\n"
         "Bundle A canonicalisation + Bundle B post-protonation re-pass should "
         "have caught any naming variance upstream. This is either a substrate "
-        "gap or a NamingRegistry rule gap. See spec/plan/"
-        "topology-encoding-dependencies-2026-05-05.md §H.5.\n",
+        "gap or a NamingRegistry rule gap; update the topology encoding table and NamingRegistry together.\n",
         kind, atom_index,
         res.AminoAcidInfo().three_letter_code,
         res.sequence_number,
@@ -282,7 +281,7 @@ ComposeAtomSemantic(const std::vector<std::unique_ptr<Atom>>& atoms,
             "default row leaking to downstream calculators. The load path "
             "is unsupported for non-standard residues; refuse before "
             "substrate composition. See LegacyAmberTopology fail-loud "
-            "discipline and codex-review Finding 4.\n",
+            "discipline and review-review Finding 4.\n",
             ri,
             res.sequence_number,
             res.chain_id.c_str(),

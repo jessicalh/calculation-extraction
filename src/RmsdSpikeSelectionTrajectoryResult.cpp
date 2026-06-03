@@ -47,7 +47,7 @@ void RmsdSpikeSelectionTrajectoryResult::Compute(
     // Earlier code used `RmsdAtFrame(frame_idx)` which silently
     // returned NaN at any stride > 1 because TR11 stores DENSELY by
     // sample order while `frame_idx` is the original TRR frame index
-    // (codex round 1 2026-05-21 CRITICAL finding).
+    // (review round 1 2026-05-21 CRITICAL finding).
     const auto& rmsd_tracker =
         tp.Result<RmsdTrackingTrajectoryResult>();
     const double rmsd = rmsd_tracker.LatestRmsd();

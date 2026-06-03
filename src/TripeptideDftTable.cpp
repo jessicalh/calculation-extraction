@@ -81,7 +81,7 @@ std::vector<TensorEntry> ParseTensorJson(const std::string& json_text) {
     // silent zero tensor / zero scalar that nothing downstream catches.
     // Exact shapes (3x3, 5) are asserted as well: .at() already catches a
     // too-short array, but extra rows/cols/components would be silently
-    // truncated — also malformed, so fail loud (codex MEDIUM 2026-05-25).
+    // truncated — also malformed, so fail loud (review MEDIUM 2026-05-25).
     std::vector<TensorEntry> out;
     try {
         for (const auto& o : nlohmann::json::parse(json_text)) {

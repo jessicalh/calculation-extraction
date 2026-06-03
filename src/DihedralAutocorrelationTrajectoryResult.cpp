@@ -24,7 +24,7 @@ namespace {
 constexpr double kNaN = std::numeric_limits<double>::quiet_NaN();
 
 // Signed dihedral, atan2 form, NaN at degeneracy. Cloned from
-// DihedralTimeSeriesTrajectoryResult (PATTERNS.md 17, 10):
+// DihedralTimeSeriesTrajectoryResult (project conventions 17, 10):
 //   D = atan2( (n1 x b2hat) . n2, n1 . n2 ),
 //   b1=p2-p1, b2=p3-p2, b3=p4-p3, n1=b1xb2, n2=b2xb3.
 double Dihedral(const Vec3& p1, const Vec3& p2,
@@ -94,7 +94,7 @@ DihedralAutocorrelationTrajectoryResult::Create(const TrajectoryProtein& tp) {
 
     // Clamp to >= 1: a misconfigured dynamics_n_lags <= 0 must not size the
     // accumulators to zero (Finalize would then read an empty vector).
-    // codex review 2026-05-29.
+    // review review 2026-05-29.
     const double n_lags_raw = CalculatorConfig::Get("dynamics_n_lags");
     const std::size_t n_lags =
         (n_lags_raw >= 1.0) ? static_cast<std::size_t>(n_lags_raw) : 1;

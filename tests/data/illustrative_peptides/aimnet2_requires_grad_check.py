@@ -2,7 +2,7 @@
 requires_grad on the coordinate input tensor?
 
 Gates whether the planned AIMNet2ChargeResponseGradientResult slice (per
-spec/PLANNED_CALCULATORS_2026-04-22.md Amendment 2026-05-08(b)) can
+design note Amendment 2026-05-08(b)) can
 be implemented as a single autograd backward pass through the
 TorchScript model, or whether the model needs re-exporting from the
 original PyTorch with grad tracking enabled.
@@ -97,7 +97,7 @@ def main() -> int:
         print(f"FAIL: model not found at {JPT_PATH}")
         return 2
 
-    # Stick to CPU so we don't fight codex for the GPU.
+    # Stick to CPU so we don't fight review for the GPU.
     device = "cpu"
     print(f"Loading {JPT_PATH} on {device} ...")
     try:

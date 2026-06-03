@@ -40,7 +40,7 @@ void AIMNet2ChargeResponseGradientTimeSeriesTrajectoryResult::Compute(
     // A custom config that omits
     // the Require would land NaN-fill rows here; the F1 non-finite
     // gradient guard at the source calculator can also trip this gate
-    // by returning nullptr on degenerate-backward frames (codex F1
+    // by returning nullptr on degenerate-backward frames (review F1
     // 2026-05-20).
     const bool source_present = conf.HasResult<AIMNet2ChargeResponseGradientResult>();
     if (!source_present) {
@@ -94,7 +94,7 @@ void AIMNet2ChargeResponseGradientTimeSeriesTrajectoryResult::WriteH5Group(
     grp.createAttribute("units_vector",           std::string("e^2/Å"));
     grp.createAttribute("units_scalar",           std::string("e^2/Å"));
     // Vec3 metadata follows the existing TR convention: layout +
-    // normalization + parity emitted as separate attrs (codex review
+    // normalization + parity emitted as separate attrs (review review
     // 2026-05-20). Charge-response gradient vector is a Cartesian-ordered
     // Vec3 with odd parity (gradient of a scalar w.r.t. atomic coordinates).
     grp.createAttribute("irrep_layout_vector",    std::string("x,y,z"));

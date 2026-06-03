@@ -136,7 +136,7 @@ void MopacChargeWelfordTrajectoryResult::WriteH5Group(
         "WriteH5Group skips the entire group when source_attached_count==0."));
 
     // Per-dataset units attrs: e for mean/std/min/max; e^2 for m2;
-    // frame_index for *_frame; frame_count for n_per_atom (codex H3
+    // frame_index for *_frame; frame_count for n_per_atom (review H3
     // 2026-05-20 convention).
     std::vector<double>        mean(N), std_(N), m2(N), min_(N), max_(N);
     std::vector<std::uint64_t> min_frame(N), max_frame(N), n_per_atom(N);

@@ -163,7 +163,7 @@ TEST(MopacBondOrderWelford, Integration1P9J) {
     //   - bonds reported by MOPAC in at least one frame → finite mean
     //   - bonds NEVER reported (e.g., MOZYME-merged interior
     //     bonds) → NaN mean (n_present == 0, WelfordFinalize NaN-fills)
-    // Per `feedback_conditional_welford_for_sentinels` (R6 codex
+    // Per `feedback_conditional_welford_for_sentinels` (R6 review
     // 2026-05-18). Both are valid SDK output; downstream uses
     // isfinite() to gate.
     std::size_t n_finite = 0, n_nonzero = 0, n_nan = 0;

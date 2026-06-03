@@ -12,7 +12,7 @@
 // PlanarStereo, RingPosition). This calculator carries the actual
 // *deviation from canonical* in each frame.
 //
-// Per Amendment 2026-05-08(a) (spec/PLANNED_CALCULATORS_2026-04-22.md).
+// Per Amendment 2026-05-08(a) (design note).
 // Four quantities, all derived from positions only — no electronic
 // structure work, negligible cost relative to any kernel calculator.
 //

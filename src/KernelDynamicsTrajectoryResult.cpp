@@ -118,7 +118,7 @@ KernelDynamicsTrajectoryResult::Create(const TrajectoryProtein& tp) {
     auto r = std::make_unique<KernelDynamicsTrajectoryResult>();
     // Clamp to >= 1: a misconfigured dynamics_n_lags <= 0 must not size the
     // accumulators to zero (Finalize would then read an empty covariance
-    // vector). codex review 2026-05-29.
+    // vector). review review 2026-05-29.
     const double n_lags_raw = CalculatorConfig::Get("dynamics_n_lags");
     const std::size_t n_lags =
         (n_lags_raw >= 1.0) ? static_cast<std::size_t>(n_lags_raw) : 1;
@@ -204,7 +204,7 @@ void KernelDynamicsTrajectoryResult::Finalize(TrajectoryProtein& tp,
         // or a non-finite c0. The last shouldn't occur -- the source
         // calculators sanitise NaN/Inf (PATTERNS "absent, not faked") -- but
         // the explicit isfinite() keeps a NaN channel from masquerading as a
-        // clean constant via NaN-compare fall-through (codex review 2026-05-29).
+        // clean constant via NaN-compare fall-through (review review 2026-05-29).
         if (n_frames_ < 2 || !std::isfinite(c0) || !(c0 > 1e-15)) {
             continue;  // curves stay 0, reductions stay NaN
         }

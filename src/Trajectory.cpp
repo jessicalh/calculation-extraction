@@ -385,7 +385,7 @@ void Trajectory::WriteH5(HighFive::File& file) const {
     // walk the distinct kinds and emit a group per kind with its
     // records' frame_idx, time_ps, reason, AND metadata. Metadata is
     // encoded as one JSON string per record in a `metadata_json` (R,)
-    // variable-length string dataset (codex round 1 2026-05-21 HIGH
+    // variable-length string dataset (review round 1 2026-05-21 HIGH
     // finding: emitters built rich metadata maps but the H5 surface
     // was dropping them; SDK consumers had no path to read them
     // back). Schema is intentionally flat-JSON-per-record because
@@ -474,7 +474,7 @@ bool Trajectory::LoadEdr(const std::filesystem::path& edr_path) {
     // Log missing columns once at load time so downstream can audit
     // schema drift across GROMACS versions / force fields. Distinct
     // from "source attached but no frame match" (handled at TR level
-    // via source_attached_per_frame mask). Per codex 2026-05-18: a
+    // via source_attached_per_frame mask). Per review 2026-05-18: a
     // missing-column row should NOT silently become 0.0 — 0.0 is a
     // legitimate energy value (e.g. urey_bradley=0 on AMBER without
     // U-B terms); the column-missing case must emit NaN so downstream

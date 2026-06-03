@@ -1,7 +1,7 @@
 #pragma once
 //
 // RunConfiguration: typed description of a trajectory-run shape.
-// See OBJECT_MODEL.md (trajectory-scope). Two named static shapes:
+// See object model (trajectory-scope). Two named static shapes:
 // PerFrameExtractionSet and FullFatFrameExtraction (the latter is the
 // former with MOPAC-family trajectory results and vacuum Coulomb
 // enabled). Each encodes per-frame RunOptions, the list of results to

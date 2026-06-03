@@ -3,7 +3,7 @@
 // PhysicalConstants.h — fixed constants and legacy thresholds used by the
 // calculation engine.
 //
-// Literature-sourced constants live here so the thesis can cite them and
+// Literature-sourced constants live here so the analysis can cite them and
 // the examiner can audit them. A few compatibility thresholds also remain
 // here for callers that have not moved to CalculatorConfig.
 //
@@ -284,8 +284,8 @@ inline D4EeqParams D4EeqParamsFor(Element e) {
 // Note: Wang & Bax 1996 (DOI 10.1021/ja9535524) later reparametrized
 // these to (6.98, -1.38, 1.72) on a refined ubiquitin NMR/X-ray phi
 // set (Table 1 row 1); both are valid, the 1993 values are the
-// thesis-default canonical reference. Reference PDF:
-//   references/vuister-lecture-j-couplings.pdf (the Vuister teaching
+// default canonical reference. Reference PDF:
+//   source literature (the Vuister teaching
 //   lecture quotes A,B,C = 6.51, -1.76, 1.60 verbatim).
 // Wang-Bax fit form (published convention) has theta_pub=-60 deg.
 // The project phi sign is opposite, so theta_project=+60 deg.
@@ -310,7 +310,7 @@ constexpr double KARPLUS_HN_HA_THETA =  PI / 3.0;  // project theta; Wang-Bax th
 // 1993 (NOT a replacement -- see feedback_methods_accumulate). Same
 // atomic dihedral as J_HN_Halpha (H-N-CA-HA).
 // Reference PDF:
-//   references/vogeli-2007-limits-backbone-dynamics-3j-couplings-gb3.pdf
+//   source literature
 //   Table 1 page 9383, byte-verified 2026-05-19.
 // Arithmetic range: A>0, B<0; max at f(-1) = A - B + C = 9.86 Hz;
 // vertex u* = -B/(2A) = 0.079 in (-1, 1), f(u*) = C - B^2/(4A) = 0.58
@@ -331,7 +331,7 @@ constexpr double KARPLUS_HN_HA_VOGELI_THETA = PI / 3.0;  // project theta;
 // Table 1 row 3, NMR/X-ray refined fit (page 2487):
 //   theta = +60 degrees, A = 3.39 +- 0.07, B = -0.94 +- 0.07, C = 0.07
 //   +- 0.02. Reference PDF:
-//   references/wang-bax-1996-karplus-phi-ubiquitin.pdf (Table 1, page
+//   source literature (Table 1, page
 //   2487; byte-verified 2026-05-19 against the open Bax-group PDF).
 // Arithmetic range: A>0, B<0; max at f(-1) = A - B + C = 4.40 Hz;
 // vertex u* = -B/(2A) = 0.139 in (-1, 1), f(u*) = C - B^2/(4A) =
@@ -349,7 +349,7 @@ constexpr double KARPLUS_HN_CB_THETA = -PI / 3.0;  // project theta;
 //   theta = 0 deg, A = 4.32, B = +0.84, C = 0.00.
 // IMPORTANT: B is POSITIVE for this coupling -- the bound derivation
 // is different from A>0/B<0 channels. Reference PDF:
-//   references/wang-bax-1996-karplus-phi-ubiquitin.pdf Table 1 page
+//   source literature Table 1 page
 //   2487, byte-verified 2026-05-19. The four-row mapping in Wang-Bax
 //   Table 1 (page 2487 leftmost column, NMR/X-ray refined fit rows
 //   in italics) is:
@@ -388,7 +388,7 @@ constexpr double KARPLUS_HN_CP_THETA = 0.0;  // Wang-Bax row 4 (theta=0 deg).
 // couplings.
 // IMPORTANT: B is POSITIVE for this coupling -- bound derivation
 // differs from A>0/B<0 channels. Reference PDF:
-//   references/wang-bax-1996-karplus-phi-ubiquitin.pdf Table 1 page
+//   source literature Table 1 page
 //   2487, byte-verified 2026-05-19.
 // Arithmetic range: A>0, B>0; max at f(+1) = A + B + C = 7.22 Hz;
 // vertex u* = -B/(2A) = -0.292 in (-1, 1), f(u*) = C - B^2/(4A) =
@@ -408,7 +408,7 @@ constexpr double KARPLUS_HA_CP_THETA = PI / 3.0;  // project theta; Wang-Bax row
 // Table 2 (page 7086) "3J(N',Cgamma)" block, consensus row (cos power
 // coefficients): A = 1.29, B = -0.49, C = 0.37. Byte-verified
 // 2026-05-19 against the page-7086 PDF table. Reference PDF:
-//   references/perez-2001-self-consistent-karplus-3j-chi1.pdf
+//   source literature
 // Arithmetic range: A>0, B<0; max at f(-1) = A - B + C = 2.15 Hz;
 // vertex u* = -B/(2A) = 0.190 in (-1, 1), f(u*) = C - B^2/(4A) =
 // 0.32 Hz (MIN).
@@ -430,8 +430,7 @@ constexpr double KARPLUS_N_CG_THETA = 0.0;  // Perez 2001 uses chi1 = N-CA-CB-CG
 // self-consistent fit internalizes the substituent-position
 // bookkeeping in the per-coupling coefficients, so feeding the
 // C-CA-CB-CG atomic dihedral directly is the correct modern usage.
-// Reference PDF: references/perez-2001-self-consistent-karplus-3j-
-// chi1.pdf Table 2 page 7086.
+// Reference: Perez et al. 2001 Table 2 page 7086.
 // Arithmetic range: A>0, B<0; max at f(-1) = A - B + C = 3.73 Hz;
 // vertex u* = -B/(2A) = 0.188 in (-1, 1), f(u*) = C - B^2/(4A) =
 // 0.468 Hz (MIN).
@@ -455,8 +454,7 @@ constexpr double KARPLUS_CP_CG_THETA = 0.0;  // Perez 2001 internalizes the
 // methine (single Hbeta) on Ile/Val/Thr; methyl (HB1/HB2/HB3) on Ala;
 // absent on Gly. See JCouplingTimeSeriesTrajectoryResult Hbeta lookup
 // for the per-residue policy.
-// Reference PDF: references/perez-2001-self-consistent-karplus-3j-
-// chi1.pdf Table 2 page 7086.
+// Reference: Perez et al. 2001 Table 2 page 7086.
 // Arithmetic range: A>0, B<0; max at f(-1) = A - B + C = 10.82 Hz;
 // vertex u* = -B/(2A) = 0.095 in (-1, 1), f(u*) = C - B^2/(4A) =
 // 2.155 Hz (MIN).

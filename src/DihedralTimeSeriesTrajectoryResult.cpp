@@ -43,7 +43,7 @@ constexpr std::uint8_t kRamaOther      = 5;
 // (PlanarGeometry NaN-propagates implicitly via zero-norm normalize();
 // ChiRotamer returns 0.0). NaN is the honest signal for "indeterminate
 // angle" and lets consumers distinguish from a real 0 rad measurement.
-// Per PATTERNS.md the utility-namespace anti-pattern blocks extracting a
+// Per project conventions the utility-namespace anti-pattern blocks extracting a
 // shared helper; equation in comment per PATTERNS Lesson 10 ("Equations in
 // comments, Eigen in code"). The drift between the three sites is tracked
 // as a follow-up audit per feedback_audit_the_formula_family.
@@ -461,7 +461,7 @@ void DihedralTimeSeriesTrajectoryResult::WriteH5Group(
         "always_attached -- positions are always present at tp.Seed time, "
         "so this TR has no conditional source. source_attached_per_frame "
         "is emitted as all-1 for SDK uniformity with conditionally-"
-        "attached-source TRs (see OBJECT_MODEL.md 'Conditional-attach TR "
+        "attached-source TRs (see object model 'Conditional-attach TR "
         "discipline, 2026-05-15')."));
 
     // ── Per-frame (T,) ───────────────────────────────────────────────
@@ -476,7 +476,7 @@ void DihedralTimeSeriesTrajectoryResult::WriteH5Group(
         "Trivially always 1 for this TR. Positions are always present at "
         "tp.Seed time; this TR has no conditional source ConformationResult. "
         "Dataset emitted to match the Conditional-attach TR discipline "
-        "(OBJECT_MODEL.md 'Conditional-attach TR discipline, 2026-05-15') "
+        "(object model 'Conditional-attach TR discipline, 2026-05-15') "
         "for SDK uniformity -- consumers reading either flavour of TR "
         "see the same dataset shape."));
 

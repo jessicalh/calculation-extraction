@@ -28,7 +28,7 @@
 // structure). Units differ from BS: HM stores -n⊗V where V is the
 // surface integral in Å⁻¹ (no PPM_FACTOR multiplication, unlike
 // BS), so the field on ConformationAtom is in Å⁻¹, not ppm. See
-// OBJECT_MODEL.md "Contract drift" 2026-05-16.
+// object model "Contract drift" 2026-05-16.
 //
 
 #include "DenseBuffer.h"

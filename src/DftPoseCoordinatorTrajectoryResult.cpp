@@ -70,7 +70,7 @@ void DftPoseCoordinatorTrajectoryResult::Finalize(
 
     // Idempotency guard: a second Finalize call would recollect the
     // same upstream records and push duplicates into the SelectionBag
-    // (codex round 2 2026-05-21 MEDIUM). Bag-shaped data flow makes
+    // (review round 2 2026-05-21 MEDIUM). Bag-shaped data flow makes
     // the data-flow short-circuit shared-bag-aware; a flag is the
     // right shape here.
     if (finalized_) return;
@@ -79,7 +79,7 @@ void DftPoseCoordinatorTrajectoryResult::Finalize(
     // each kind's push order (oldest first); the first record in each
     // (residue_index, ns_bucket) cell wins.
     //
-    // **Iterator invalidation guard** (codex round 1 2026-05-21 HIGH
+    // **Iterator invalidation guard** (review round 1 2026-05-21 HIGH
     // finding): `RecordBag::ByKind<T>()` returns pointers INTO the
     // bag's internal vector. If we pushed reduced records while
     // iterating, the vector could reallocate and invalidate the
@@ -92,7 +92,7 @@ void DftPoseCoordinatorTrajectoryResult::Finalize(
     auto collect = [&](const SelectionRecord* rec, const char* origin) {
         if (!rec) return;
         const int  ri      = RecordResidueIndex(*rec);
-        // Bucket by ABSOLUTE elapsed time (codex round 2 HIGH): the
+        // Bucket by ABSOLUTE elapsed time (review round 2 HIGH): the
         // earlier `frame_idx / kNsBucketFrames` form was wrong at any
         // TRR cadence other than the 20 ps/frame default because
         // `frame_idx` counts both read AND skipped raw TRR frames.

@@ -42,7 +42,7 @@
 //       source_attached_policy  = "always_attached" — but Compute's
 //                                  HasResult gate emits NaN-fill +
 //                                  source_attached_per_frame=0 on
-//                                  absent frames (codex review
+//                                  absent frames (review review
 //                                  2026-05-20; "absent, not faked").
 //
 // Per `feedback_methods_accumulate`, emit both vector AND scalar even
@@ -91,7 +91,7 @@ private:
     std::vector<std::vector<double>> per_atom_scalar_;  // (N, T)
     std::vector<std::size_t>         frame_indices_;
     std::vector<double>              frame_times_;
-    // Per-frame source-attached mask (canonical gate; codex review
+    // Per-frame source-attached mask (canonical gate; review review
     // 2026-05-20). Normally all-1 under the always-attached policy.
     std::vector<std::uint8_t>        source_attached_per_frame_;
     std::size_t n_frames_  = 0;

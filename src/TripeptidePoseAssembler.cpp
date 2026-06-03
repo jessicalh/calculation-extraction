@@ -442,7 +442,6 @@ bool AssembleCentralTyped(
         // CG1/CG2); relaxed (drop BranchAddress/DiastereotopicIndex,
         // nearest-spatial tiebreak) for graph-automorphic pairs (PHE
         // CD1/CD2, ARG NH1/NH2, methyl Hs) that no WL round can split.
-        // See larsen-residue-design-2026-05-11.md.
         const bool relaxed = perceived.canonical_assignment_ambiguous;
         std::vector<std::size_t> candidates =
             candidate_protein_atoms(perceived.identity, relaxed);

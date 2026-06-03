@@ -98,7 +98,7 @@ public:
     // Returns AV (immediately-valid mid-stream) per-frame RMSD scalar
     // in Angstroms.
     //
-    // **Trajectory frame index vs sample index** (codex round 1
+    // **Trajectory frame index vs sample index** (review round 1
     // 2026-05-21 critical finding): TR11 stores RMSDs DENSELY by
     // sample order, NOT keyed by the original trajectory frame index.
     // At stride > 1 (PerFrameExtractionSet default stride=2),

@@ -255,7 +255,7 @@ class CategoryInfo:
     def element(self) -> np.ndarray:
         """Per-atom atomic number as int8. 1=H, 6=C, 7=N, 8=O, 16=S.
 
-        Matches the convention of the existing ``element.npy``; codex
+        Matches the convention of the existing ``element.npy``; review
         can stratify by element with ``info.element == 6`` etc.
         """
         return self._data["element"]
@@ -384,7 +384,7 @@ class CategoryInfo:
 class Residues:
     """Per-residue record from ``residues.npy``.
 
-    One row per residue. Codex's RequiredTable contract item, plus
+    One row per residue. review's RequiredTable contract item, plus
     prev/next chain-aware links (-1 at chain boundaries) and the
     Markley-style 1-letter / 3-letter renderings.
 
@@ -660,7 +660,7 @@ class RingMembership:
     """Per (ring, ring-vertex-atom) record from ``ring_membership.npy``.
 
     One row per (ring, vertex atom) pair, in canonical ring walk order.
-    Codex's RingMembershipTable contract -- the only acceptable basis
+    review's RingMembershipTable contract -- the only acceptable basis
     for ring-to-atom projection of pucker / aromatic-chi2 / ring-current
     contributions.
 
@@ -711,7 +711,7 @@ class ExtractionManifest:
 
     Holds schema version, protein id, generated_at, topology-population
     flags, axis sizes, and the axis-alignment statements. Use as a
-    self-describing companion to the NPY tree; codex's first-pass
+    self-describing companion to the NPY tree; review's first-pass
     validation gates read from here.
     """
 
@@ -949,7 +949,7 @@ class LarsenHBondGroup:
     Methods accumulate side-by-side with the kernel-form ``HBondGroup``
     — both calculators cover overlapping physics (amide-H / backbone-O
     subset) but use different formulations (kernel × η vs grid lookup).
-    Per-atom-type differences are themselves thesis-reportable. See
+    Per-atom-type differences are themselves reportable. See
     ``feedback_methods_accumulate`` memory entry.
 
     Phase 1 (landed) covers amide-H donor / backbone-O acceptor only.
@@ -973,7 +973,7 @@ class LarsenHBondGroup:
       solvent-exposed. A C-term-acceptor H-bond that our grid path
       couldn't process is NOT spuriously assigned the water term —
       the DSSP-paired bookkeeping is separate from the grid-paired
-      bookkeeping (codex M2).
+      bookkeeping (review M2).
     - ``count`` counts H-bond pairs that contributed to this atom under
       any of the four Table 2 classes — the diagnostic CB does NOT
       increment it.
@@ -1077,7 +1077,7 @@ def _validate_topology_invariants(tg: TopologyGroup, n_atoms: int,
                                     ) -> None:
     """Cross-check declared axis sizes + reference integrity.
 
-    Codex contract first-pass validation gates: the manifest declares
+    review contract first-pass validation gates: the manifest declares
     axis sizes; the structured-NPY tables must agree, and every
     cross-reference (bond endpoint -> atom, ring membership -> atom +
     ring) must be in-bounds. Raises ``ValueError`` on any violation.

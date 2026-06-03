@@ -4,7 +4,7 @@
 // spectral-density estimation of a per-frame signal sampled along a
 // trajectory. Free functions plus a small accumulator struct, not a
 // helper class -- the same posture TrajectoryMoments.h takes for the
-// Welford discipline, which PATTERNS.md's "utility namespace" rule
+// Welford discipline, which project conventions's "utility namespace" rule
 // sanctions for shared numerical primitives. Defining the estimator once
 // here keeps the bias convention, the window, and the bounded-memory
 // bookkeeping from drifting across the TrajectoryResults that
@@ -28,7 +28,7 @@
 // The full-range mean needs every sample, yet C(k) is recoverable in
 // O(L) memory by accumulating, per lag k, the raw cross-product
 // P_k = sum_t x_t x_{t+k}, the total sum S and count T, and the first-L
-// and last-L samples for the tail corrections (codex CRITICAL,
+// and last-L samples for the tail corrections (review CRITICAL,
 // 2026-05-28; the refactor the BsT0 header sketches):
 //
 //   left_k  = sum_{t=0}^{T-k-1} x_t = S - (sum of the last  k samples)
@@ -163,7 +163,7 @@ private:
 // Ann. Math. Statist. 32, 329; de la Vallee Poussin window). Its spectral
 // window is non-negative, so the Blackman-Tukey estimate below is
 // guaranteed non-negative -- unlike a Hann lag window, which can produce
-// negative bins (codex MAJOR, 2026-05-28).
+// negative bins (review MAJOR, 2026-05-28).
 //
 //   w(k) = 1 - 6(k/M)^2 + 6(k/M)^3      0   <= k <= M/2
 //        = 2(1 - k/M)^3                 M/2 <  k <= M

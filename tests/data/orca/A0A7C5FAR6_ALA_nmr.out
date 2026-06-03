@@ -177,7 +177,7 @@ interface, adapt or use parts of their codes:
   * Starting time: Fri Mar 27 12:25:43 2026
   * Host name:     jessica2
   * Process ID:    346680
-  * Working dir.:  /home/jessica2/orca_calibration/results/.orca_tmp_hdO9gb
+  * Working dir.:  /tmp/nmr-shielding-orca
   ***********************************
 
 NOTE: MaxCore=8000 MB was set to SCF,MP2,MDCI,CIPSI,MRCI,RASCI and CIS

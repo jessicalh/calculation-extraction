@@ -16,7 +16,7 @@
 // chi[0..3] from Residue.chi[k]. Same IUPAC dihedral and bond-graph
 // backbone-adjacency conventions as DihedralTimeSeriesTrajectoryResult,
 // whose Dihedral() helper and Predecessor/Successor walk are cloned here
-// (PATTERNS.md 17). Omega is omitted -- a near-rigid trans bond carries
+// (project conventions 17). Omega is omitted -- a near-rigid trans bond carries
 // little decorrelation signal; DihedralTimeSeries keeps the omega series.
 //
 // Deferred (noted in the design doc and group attrs), to land carefully
@@ -65,7 +65,7 @@ public:
     }
 
     // No declared dependency: positions and Residue.chi[k] are present
-    // after tp.Seed (PATTERNS.md 15), like DihedralTimeSeries.
+    // after tp.Seed (project conventions 15), like DihedralTimeSeries.
     std::vector<std::type_index> Dependencies() const override { return {}; }
 
     static std::unique_ptr<DihedralAutocorrelationTrajectoryResult>

@@ -86,7 +86,7 @@ void Dssp8TimeSeriesTrajectoryResult::Compute(
         const auto& dssp_residues = dssp.AllResidues();
         const std::size_t dssp_R = dssp_residues.size();
         for (std::size_t ri = 0; ri < R; ++ri) {
-            // Codex review 2026-05-19: index-bounds check is necessary
+            // review review 2026-05-19: index-bounds check is necessary
             // but NOT sufficient. DsspResult resizes residues_ to
             // ResidueCount() and leaves unmapped entries at default
             // (secondary_structure='C', observed=false). Treating

@@ -100,7 +100,7 @@ RunResult OperationRunner::Run(ProteinConformation& conf,
     // we log and continue rather than aborting the pipeline. Mirrors
     // the existing pattern for DSSP/MOPAC/APBS (calculators that can
     // legitimately fail under specific input shapes), per the
-    // PATTERNS.md "Diagnostic error messages" rule.
+    // project conventions "Diagnostic error messages" rule.
     {
         OperationLog::Scope pgr_scope("PlanarGeometryResult");
         auto pgr = PlanarGeometryResult::Compute(conf);

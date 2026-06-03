@@ -38,7 +38,7 @@ bool TrajectoryProtein::BuildFromTrajectory(const std::string& dir_path) {
     // production.* the canonical naming. md.* is legacy CHARMM-era
     // and not used by the AMBER fixtures. Older callers that still
     // pass dir_path expecting md.tpr will need updating; flagged in
-    // CLAUDE.md path-convention discussion.
+    // project conventions path-convention discussion.
     const std::string tpr_path = dir_path + "/production.tpr";
     const std::string topol_top_path =
         (fs::path(dir_path).parent_path() / "topol.top").string();

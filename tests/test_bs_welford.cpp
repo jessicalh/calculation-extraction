@@ -274,7 +274,7 @@ TEST(BsWelford, Integration1P9J) {
     EXPECT_GT(t2_populated, 0u)
         << "BS Welford T2 per-component all-zero — T2 Completeness regression";
 
-    // Codex 2026-05-18: dxdt_n must equal delta_n on a well-formed
+    // review 2026-05-18: dxdt_n must equal delta_n on a well-formed
     // trajectory (no duplicated-timestamp frames). Catches regression
     // of the separate-counter fix that prevents zero-dt frames from
     // zero-filling the rate Welford. 1P9J fleet_amber is well-formed;

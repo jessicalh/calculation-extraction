@@ -372,7 +372,7 @@ TEST(JCouplingTimeSeries, Integration1P9J) {
         // SER/CYS/THR: chi1 terminal is OG/SG/OG1 (non-carbon). The
         // J(N,Cγ) and J(C',Cγ) channels are NaN by the Element::C
         // element gate; chi1_exists is still 1 (chi[0].Valid()) so
-        // the chi1 timeline in DihedralTS is still emitted. Codex F3
+        // the chi1 timeline in DihedralTS is still emitted. review F3
         // 2026-05-20.
         const bool is_ser = (res.type == nmr::AminoAcid::SER);
         const bool is_cys = (res.type == nmr::AminoAcid::CYS);
@@ -399,7 +399,7 @@ TEST(JCouplingTimeSeries, Integration1P9J) {
         // N-terminal residue (first in chain): all phi-derived
         // backbone channels are NaN because no C'(prev) exists to
         // define project phi. J_Halpha_Cprime additionally needs
-        // C'(prev) for the actual 3-bond path. Post-2026-05-20 codex
+        // C'(prev) for the actual 3-bond path. Post-2026-05-20 review
         // F2: Halpha-Cprime now uses HA-CA-N-C'(prev) (phi axis), not
         // HA-CA-C-N(next) (psi axis).
         const bool is_n_terminus = !tp.ProteinRef().BackbonePredecessor(ri).has_value();
@@ -688,11 +688,11 @@ TEST(JCouplingTimeSeries, ProbeHNCAHAvsPhiOffset_1UBQ) {
 }
 
 
-// Literature-anchored probe (codex F8): runs the JCoupling TR on
+// Literature-anchored probe (review F8): runs the JCoupling TR on
 // the 1UBQ_pm6dh3plus fixture protein and checks that the J values
 // reproduce the rough literature bands for helix and sheet residues
 // stratified by phi. With the project-sign (phi + theta_offset)
-// Karplus form (codex F6 fix + project-sign repair, 2026-05-20), the
+// Karplus form (review F6 fix + project-sign repair, 2026-05-20), the
 // curve should reproduce Wang-Bax Figure 4 panels A-D.
 //
 // Sources for the band targets (Wang & Bax 1996 JACS 118:2483,
@@ -781,7 +781,7 @@ TEST(JCouplingTimeSeries, LiteratureAnchoredProbeOn1UBQ) {
 
         // Karplus J via the (phi + theta_offset) form -- mirrors the
         // form shipped in JCouplingTimeSeriesTrajectoryResult after
-        // codex F6 (2026-05-20). Each backbone channel's
+        // review F6 (2026-05-20). Each backbone channel's
         // theta_offset constant lives in PhysicalConstants.h.
         const double th_hnha = phi + nmr::KARPLUS_HN_HA_THETA;
         const double th_hncb = phi + nmr::KARPLUS_HN_CB_THETA;

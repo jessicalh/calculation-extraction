@@ -6,7 +6,7 @@
 // bespoke skip-flag combinations across ~20 test files were the surface area
 // that today's adversarial review attention got consumed by. This module
 // collapses that surface to two named profiles. See
-// spec/plan/test-suite-realignment-deferred-2026-05-17.md for the full
+// design note for the full
 // decision record.
 //
 // Two profiles cover today's TR tests:

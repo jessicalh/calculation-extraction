@@ -4,7 +4,7 @@
 # existing code while still catching real style violations on new
 # code.
 #
-# Workflow rule (CLAUDE.md): use `git clang-format HEAD` on staged
+# Workflow rule (project conventions): use `git clang-format HEAD` on staged
 # changes — NOT `clang-format -i <file>` over a whole file. The
 # config is intentionally conservative about repacking carefully-
 # hand-broken multi-line layouts; bulk-format would still churn

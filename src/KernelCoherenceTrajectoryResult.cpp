@@ -29,7 +29,7 @@ namespace {
 using Channel = KernelCoherenceTrajectoryResult::Channel;
 
 // Channel value/name/units, cloned from KernelDynamicsTrajectoryResult so
-// the two TRs stay independent (PATTERNS.md 17). Same 13 kernel scalars.
+// the two TRs stay independent (project conventions 17). Same 13 kernel scalars.
 double ChannelValue(Channel c, const ConformationAtom& a) {
     switch (c) {
         case Channel::BsT0:         return a.bs_shielding_contribution.T0;

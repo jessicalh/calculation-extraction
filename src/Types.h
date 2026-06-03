@@ -60,7 +60,7 @@ inline int AtomicNumberForElement(Element e) {
     }
 }
 
-// Compile-time element properties (OBJECT_MODEL.md)
+// Compile-time element properties (object model)
 inline double CovalentRadiusForElement(Element e) {
     switch (e) {
         case Element::H: return 0.31;

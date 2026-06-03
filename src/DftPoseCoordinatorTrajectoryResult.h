@@ -27,7 +27,7 @@
 //   and `traj.Selections().ByKind<ChiRotamerSelectionTrajectoryResult>()`
 //   at Finalize. Dependencies() lists both writer TRs so Phase 4 validates
 //   that they are attached; RunConfiguration attaches them before this
-//   reducer. Per PATTERNS.md §17, the cross-result read is warranted:
+//   reducer. Per project conventions §17, the cross-result read is warranted:
 //   the whole purpose of this TR is to reduce
 //   the OTHER TRs' output streams; duplicating their accumulation
 //   would be wasteful AND the semantic coupling is explicit.
@@ -54,7 +54,7 @@ public:
     //   1 ns dedup bucket = 1000 ps absolute trajectory time. Keyed
     //   on `record.time_ps`, not the raw TRR frame index — the
     //   previous frame-index form was wrong at any TRR cadence other
-    //   than 20 ps/frame (codex round 2 2026-05-21 HIGH finding).
+    //   than 20 ps/frame (review round 2 2026-05-21 HIGH finding).
     static constexpr double kNsBucketPs = 1000.0;
 
     std::string Name() const override {
@@ -81,7 +81,7 @@ public:
 
 private:
     std::size_t n_reduced_ = 0;
-    // Finalize idempotency guard (codex round 2 2026-05-21 MEDIUM):
+    // Finalize idempotency guard (review round 2 2026-05-21 MEDIUM):
     // unlike most TRs, the data this reducer emits lives in the
     // SHARED SelectionBag rather than on TR-private state, so the
     // canonical data-flow short-circuit (have_we_emitted check)

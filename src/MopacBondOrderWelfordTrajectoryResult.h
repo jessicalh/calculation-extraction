@@ -38,7 +38,7 @@
 // covalent observation for the calibration target.
 //
 // SENTINEL-AWARE WELFORD (per `feedback_conditional_welford_for_sentinels`,
-// codex R6 2026-05-18): naive accumulation of "no observation"
+// review R6 2026-05-18): naive accumulation of "no observation"
 // sentinels biases the running mean toward 0. Instead, we accumulate
 // the order Welford ONLY on frames where the bond was reported
 // (`bo != 0.0`) AND emit a companion `order_present_fraction`

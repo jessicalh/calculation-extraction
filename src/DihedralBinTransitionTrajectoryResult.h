@@ -63,7 +63,7 @@
 //
 // Source-attached gate: positions always present at tp.Seed time;
 // source_attached_per_frame emitted as all-1 for SDK uniformity
-// (OBJECT_MODEL.md "Conditional-attach TR discipline").
+// (object model "Conditional-attach TR discipline").
 //
 
 #include "TrajectoryResult.h"

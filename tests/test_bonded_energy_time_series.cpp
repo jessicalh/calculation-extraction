@@ -58,7 +58,7 @@ bool FixtureAvailable(const nmr::test::AmberTrajectoryFixture& fix) {
 
 // ============================================================================
 // SYNTHETIC: source-absent path. Verifies all-absent → group skipped + the
-// mixed path NaN-fills absent rows. R3 codex F5 2026-05-18.
+// mixed path NaN-fills absent rows. R3 review F5 2026-05-18.
 // ============================================================================
 
 TEST(BondedEnergyTimeSeries, SyntheticAllAbsentSkipsGroup) {

@@ -9,13 +9,13 @@
 // TrajectoryResult subclasses share one implementation of the Welford
 // update rather than copy-pasting the four-line inline block.
 //
-// Not a helper class — the project's PATTERNS.md rules out Adapter /
+// Not a helper class — the project's project conventions rules out Adapter /
 // Wrapper / Proxy / Helper / Bridge naming. These are three one-line
 // functions that operate on references into caller-owned
 // TrajectoryAtom fields. The Welford state lives on TrajectoryAtom
 // in named `WelfordMoments` substructs (one per channel) per
-// PATTERNS.md Lesson 25 corollary — see
-// spec/plan/welford-data-shape-design-2026-05-17.md.
+// project conventions Lesson 25 corollary — see
+// design note.
 //
 // Numerical notes: the scalar Welford formula is from Welford 1962
 // (Technometrics 4(3):419), unchanged since. We compute unbiased
@@ -31,7 +31,7 @@ namespace nmr {
 // WelfordMoments: per-channel running statistics. One instance per
 // scalar channel of a Welford-pattern TR rollup. Used by named
 // substruct on TrajectoryAtom (e.g. `bs_welford.t0`, `bs_welford.t1[k]`)
-// per the differentiated-structure principle in PATTERNS.md Lesson 25.
+// per the differentiated-structure principle in project conventions Lesson 25.
 //
 // Layout: 5 doubles + 2 size_t = 56 bytes per channel on the current
 // supported platform. Storage scales per atom × per Welford channel

@@ -16,7 +16,7 @@
 // the per-frame mask records 0. When source_attached_count == 0 across
 // the whole trajectory (e.g. MOPAC disabled), WriteH5Group skips the
 // /trajectory/mopac_charge_welford/ group entirely (canonical
-// "absent, not faked" — see OBJECT_MODEL.md "Conditional-attach TR
+// "absent, not faked" — see object model "Conditional-attach TR
 // discipline").
 //
 // MINIMUM-VIABLE v0 (no delta variants): single channel, full

@@ -206,7 +206,7 @@ void DihedralBinTransitionTrajectoryResult::Compute(
         }
 
         const std::uint8_t cur_bin = RamachandranBin(phi_val, psi_val);
-        // Bin 0 (kBinUnassigned) IS populated here (codex review 2026-05-19):
+        // Bin 0 (kBinUnassigned) IS populated here (review review 2026-05-19):
         // backbone_bin_occupancy[:, 0] previously stayed zero forever, but
         // the H5 legend names bin 0 as "unassigned" — so consumers reading
         // occupancy[:, 0] expected an unassigned count and got zero. Now
@@ -318,7 +318,7 @@ void DihedralBinTransitionTrajectoryResult::WriteH5Group(
         "0=unassigned (phi or psi NaN at termini / non-bonded gaps), "
         "1=alphaR, 2=beta, 3=alphaL, 4=PPII, 5=other. "
         "Identical labelling to DihedralTimeSeries.rama_region. "
-        "Codex-review-2026-05-19 fix: bin 0 IS populated when phi/psi "
+        "review-review-2026-05-19 fix: bin 0 IS populated when phi/psi "
         "are NaN, so sum(backbone_bin_occupancy[ri, :]) == n_frames for "
         "all residues. n_frames_observed[ri] = sum(occupancy[ri, 1:])."));
     grp.createAttribute("backbone_bin_boundaries", std::string(
@@ -368,7 +368,7 @@ void DihedralBinTransitionTrajectoryResult::WriteH5Group(
     grp.createAttribute("source_attached_policy", std::string(
         "always_attached -- positions always present at tp.Seed time. "
         "source_attached_per_frame trivially all-1 for SDK uniformity "
-        "(OBJECT_MODEL.md Conditional-attach TR discipline)."));
+        "(object model Conditional-attach TR discipline)."));
 
     // ── Per-residue stats (R,) ───────────────────────────────────────
     grp.createDataSet("backbone_transition_count", backbone_transition_count_)

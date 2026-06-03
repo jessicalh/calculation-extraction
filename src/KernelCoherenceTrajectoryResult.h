@@ -14,7 +14,7 @@
 // accumulator and is better landed carefully than rushed.
 //
 // Same 13 channels as KernelDynamicsTrajectoryResult, cloned here rather
-// than shared (PATTERNS.md 17: each TR self-contained, testable in
+// than shared (project conventions 17: each TR self-contained, testable in
 // isolation, safe to delete). FO lifecycle: per atom, running sums of
 // each channel, its square, and each channel-pair product accumulate each
 // frame; Finalize forms the matrix.

@@ -86,7 +86,7 @@ public:
     static bool IsActive();
 
     // Per-atom queries — for tests and downstream callers (viewer,
-    // h5-reader, debugging). All const, all read-only on the protein.
+    // trajectory reader, debugging). All const, all read-only on the protein.
     // Empty string when no projection match (and Configure has been
     // called). WriteFeatures records misses; these query methods are
     // read-only and do not update MissLog.

@@ -49,7 +49,7 @@ char ResidueOneLetterCode(AminoAcid type) {
 // Protein::BackboneConnected query (covalent C-N bond graph). chain_id
 // matching missed within-chain numbering gaps with intact bonds,
 // antibody insertion-coded structures, and cyclic peptides. See
-// PATTERNS.md + OBJECT_MODEL.md "Backbone connectivity discipline."
+// project conventions + object model "Backbone connectivity discipline."
 
 
 // One per-direction outcome for the per-residue match record.

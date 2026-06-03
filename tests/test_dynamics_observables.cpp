@@ -123,7 +123,7 @@ TEST(DynamicsObservables, Frame0Semantics) {
 }
 
 
-// ── Finalize idempotency (the codex 2026-05-29 fix) ─────────────────
+// ── Finalize idempotency (the review 2026-05-29 fix) ─────────────────
 
 TEST(DynamicsObservables, FinalizeIdempotency) {
     nmr::test::TestEnvironment::LoadCalculatorConfig();

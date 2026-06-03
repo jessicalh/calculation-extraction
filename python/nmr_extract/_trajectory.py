@@ -9,7 +9,7 @@
     traj.n_frames           # int
 
 Schema tolerance: the reader auto-detects which schema the H5 file uses
-and adapts. Codex 2026-05-18 caught the production-output incompatibility:
+and adapts. review 2026-05-18 caught the production-output incompatibility:
 
   - **Analysis schema (current `TrajectoryProtein::WriteH5`)**: root
     attrs `{protein_id, n_atoms, finalized}` only. Frame metadata at
@@ -137,7 +137,7 @@ class BondRollup:
         return len(self.atom_a)
 
 
-# ─── SelectionBag records (2026-05-21, codex round 1 HIGH #4) ──────
+# ─── SelectionBag records (2026-05-21, review round 1 HIGH #4) ──────
 
 
 @dataclass(frozen=True)
@@ -152,7 +152,7 @@ class SelectionRecordPy:
     `ns_bucket` (TR13 DftPoseCoordinator), `chi_index` / `bin_before` /
     `bin_after` (ChiRotamerSelection), etc.
 
-    Pre-2026-05-21 the H5 surface dropped metadata entirely; codex
+    Pre-2026-05-21 the H5 surface dropped metadata entirely; review
     round 1 finding made it visible. The kind name in
     `TrajectoryData.selections` is the C++ mangled type name (e.g.
     `27RmsdSpikeSelectionTraj...`) — compiler-dependent but stable
@@ -210,7 +210,7 @@ def _read_moments(grp, prefix: str) -> WelfordMoments:
     propagates the per-dataset `units` attribute from BOTH `<prefix>_mean`
     (→ `WelfordMoments.units`) and `<prefix>_m2` (→
     `WelfordMoments.m2_units`). C++ writes distinct unit strings for
-    the squared accumulator vs the value channels (codex MEDIUM finding
+    the squared accumulator vs the value channels (review MEDIUM finding
     2026-05-18); collapsing to one would lose honesty. Works for both
     1D scalar channels and 2D per-component channels — numpy carries
     the shape through.
@@ -281,7 +281,7 @@ class _TensorWelfordGroup:
     n_frames_per_atom: np.ndarray    # (N,) count of t0 samples
     delta_n_per_atom: np.ndarray     # (N,) count of t0_delta/abs/sq samples
     # Count of VALID-dt t0_dxdt samples (only frames with dt > MIN_DT_PS
-    # contribute). Per codex 2026-05-18: distinct from delta_n because
+    # contribute). Per review 2026-05-18: distinct from delta_n because
     # zero-dt frames are skipped in the rate accumulator rather than
     # zero-filled. A well-formed trajectory has dxdt_n == delta_n on every
     # atom; mismatch flags frame-duplication or stride misconfiguration.
@@ -340,7 +340,7 @@ def _load_tensor_welford(f, h5_path: str):
 def _read_dxdt_n_or_fallback(grp) -> np.ndarray:
     """Read `dxdt_n_per_atom` if present, else fall back to `delta_n_per_atom`.
 
-    The `dxdt_n_per_atom` dataset is new (codex 2026-05-18 fix: zero-dt
+    The `dxdt_n_per_atom` dataset is new (review 2026-05-18 fix: zero-dt
     frames are skipped in the rate accumulator, so dxdt has its own
     counter). Older H5 files from before the fix don't have it; for those,
     return `delta_n_per_atom` so downstream consumers don't crash. The
@@ -397,7 +397,7 @@ class EeqWelfordGroup:
     rms_delta: np.ndarray
     n_frames_per_atom: np.ndarray
     delta_n_per_atom: np.ndarray
-    # Count of VALID-dt *_dxdt samples (codex 2026-05-18). Distinct from
+    # Count of VALID-dt *_dxdt samples (review 2026-05-18). Distinct from
     # delta_n_per_atom because zero-dt frames are skipped in the rate
     # accumulator rather than zero-filled.
     dxdt_n_per_atom: np.ndarray
@@ -434,7 +434,7 @@ class SasaWelfordGroup:
     rms_delta: np.ndarray
     n_frames_per_atom: np.ndarray
     delta_n_per_atom: np.ndarray
-    # Count of VALID-dt *_dxdt samples (codex 2026-05-18). Distinct from
+    # Count of VALID-dt *_dxdt samples (review 2026-05-18). Distinct from
     # delta_n_per_atom because zero-dt frames are skipped in the rate
     # accumulator rather than zero-filled.
     dxdt_n_per_atom: np.ndarray
@@ -477,7 +477,7 @@ class HBondCountWelfordGroup:
     rms_delta: np.ndarray
     n_frames_per_atom: np.ndarray
     delta_n_per_atom: np.ndarray
-    # Count of VALID-dt *_dxdt samples (codex 2026-05-18). Distinct from
+    # Count of VALID-dt *_dxdt samples (review 2026-05-18). Distinct from
     # delta_n_per_atom because zero-dt frames are skipped in the rate
     # accumulator rather than zero-filled.
     dxdt_n_per_atom: np.ndarray
@@ -524,7 +524,7 @@ class GromacsEnergyTimeSeriesGroup:
     naive `np.argsort(e)[:N]` is unsafe when the bottom-N% slice runs
     into the NaN region (numpy sorts NaN to the end, so the failure is
     silent: you get fewer-than-N valid frames or all-NaN selections).
-    Safe pattern (R3 codex F1 2026-05-18):
+    Safe pattern (R3 review F1 2026-05-18):
 
         e = traj.energy.gromacs.total_energy
         valid = np.isfinite(e)
@@ -747,7 +747,7 @@ class WaterFieldTimeSeriesGroup:
         Use this instead of the raw uint32 `n_first` when computing means
         or feeding to a model — the uint32 sentinel `0xFFFFFFFF` would
         otherwise poison aggregations (4.29e9 waters per atom per absent
-        frame). R3 codex F3 2026-05-18.
+        frame). R3 review F3 2026-05-18.
         """
         out = self.n_first.astype(np.float64)
         out[self.n_first == self.count_absent_sentinel] = np.nan
@@ -931,7 +931,7 @@ class HydrationGeometryTimeSeriesGroup:
     # dipole_coherence: source formula `|Σ d_i| / n_shell` (e·Å in
     # numerator, dimensionless in denominator) → e·Å, NOT a [0,1]
     # dimensionless order parameter. The H5 dataset attr `units` is
-    # "e_Angstrom". R6 codex 2026-05-18.
+    # "e_Angstrom". R6 review 2026-05-18.
     dipole_coherence: np.ndarray      # (N, T)  e·Å
     count_absent_sentinel: int        # 0xFFFFFFFF
     frame_indices: np.ndarray
@@ -1164,7 +1164,7 @@ def _load_hydration_shell_time_series(f) -> Optional[HydrationShellTimeSeriesGro
 class HydrationShellWelfordGroup:
     """Per-atom Welford rollup of COM-based hydration shell features.
 
-    `nearest_ion_distance` is on a CONDITIONAL Welford (R6 codex
+    `nearest_ion_distance` is on a CONDITIONAL Welford (R6 review
     2026-05-18): only frames with a finite ion-in-cutoff distance
     contribute. Atoms with no ion observed in cutoff across any frame
     finalize to NaN (n=0). For the "is there an ion here?" question,
@@ -1399,7 +1399,7 @@ class DihedralBinTransitionGroup:
       are documented-divergent.
 
     Bin 0 (unassigned) IS populated in `backbone_bin_occupancy[:, 0]`
-    (codex-review-2026-05-19 fix): every frame contributes to exactly
+    (review-review-2026-05-19 fix): every frame contributes to exactly
     one bin, so `sum(backbone_bin_occupancy[ri, :]) == n_frames` for
     all residues, and `n_frames_observed[ri] == sum(occupancy[ri, 1:])`.
 
@@ -1665,7 +1665,7 @@ class JCouplingTimeSeriesGroup:
                            (θ=0°, NMR/X-ray refined fit, A=4.32,
                            B=+0.84, C=0.00). B is POSITIVE; J can be
                            slightly negative (~-0.04 Hz minimum).
-                           Row-mapping fixed 2026-05-20 per codex F1:
+                           Row-mapping fixed 2026-05-20 per review F1:
                            prior bundle attributed row 2 values
                            (3.75, +2.19, 1.28) to this channel.
       J_Halpha_Cprime      ³J(Hα, C') via HA-CA-N-C'(prev) dihedral;
@@ -1677,7 +1677,7 @@ class JCouplingTimeSeriesGroup:
                            1996 Table 1 ROW 2 (θ=-60°, A=3.75,
                            B=+2.19, C=1.28). B is POSITIVE. NaN at
                            N-terminus (no C'(prev)). Atom path +
-                           row-mapping fixed 2026-05-20 per codex F1
+                           row-mapping fixed 2026-05-20 per review F1
                            + F2: prior bundle used HA-CA-C-N(next)
                            (psi axis, NOT phi) with row 4 values.
       J_N_Cgamma           ³J(N, Cγ) via N-CA-CB-CG (= chi1); chi1
@@ -1699,7 +1699,7 @@ class JCouplingTimeSeriesGroup:
                            Hβ mirrored in this slot (same value).
                            Gly/Ala: NaN (no methylene Hβ).
 
-    Karplus form (post-codex-F6 + project-sign repair, 2026-05-20):
+    Karplus form (post-review-F6 + project-sign repair, 2026-05-20):
       Backbone channels (HN-Hα, HN-Cβ, HN-C', Hα-C'): J = A·cos²(φ +
       θ_offset) + B·cos(φ + θ_offset) + C, where φ is canonical
       Ramachandran C(prev)-N-CA-C (IUPAC signed atan2, radians), and
@@ -1732,7 +1732,7 @@ class JCouplingTimeSeriesGroup:
       J_Halpha_Hbeta{2,3}  A=7.23,  B=-1.37, C=2.22 (range [2.16, 10.82])
 
     All numerics live in src/PhysicalConstants.h and are byte-verified
-    against the source PDFs in references/.
+    against the source literature.
 
     Static per-residue masks (R,) uint8:
       J_HN_Halpha_exists      1 if C(prev) + H + N + CA + C + HA all
@@ -1746,7 +1746,7 @@ class JCouplingTimeSeriesGroup:
                               cached. The physical atom path is
                               HA-CA-N-C'(prev), but the emitted value
                               is phi-derived and therefore also needs
-                              current-residue C. N-terminus=0; codex
+                              current-residue C. N-terminus=0; review
                               F2/F4 2026-05-20 flipped this from
                               C-terminus.
       J_chi1_exists           1 if chi1 atoms valid (residue has chi1
@@ -2348,7 +2348,7 @@ class MopacBondOrderWelfordGroup:
     /trajectory/mopac_bond_order_welford = "MOPAC disabled").
 
     SENTINEL-AWARE WELFORD (per feedback_conditional_welford_for_sentinels,
-    R6 codex 2026-05-18; landed 2026-05-21 per math/science adversarial
+    R6 review 2026-05-18; landed 2026-05-21 per math/science adversarial
     review M6/M4): MopacResult sets bond order to exactly 0.0 for
     bonds it didn't report (NOT NaN). Naive accumulation biases the
     running mean toward 0 for intermittently-reported bonds. This
@@ -2735,7 +2735,7 @@ def _load_selections(f) -> Dict[str, List[SelectionRecordPy]]:
         frame_idx_raw = g["frame_idx"][:]
         time_ps_raw   = g["time_ps"][:]
         reason_raw    = g["reason"][:]
-        # `metadata_json` landed 2026-05-21 (codex round 1 HIGH).
+        # `metadata_json` landed 2026-05-21 (review round 1 HIGH).
         # Older H5 may not have it; tolerate absence by emitting
         # empty dicts.
         if "metadata_json" in g:
@@ -3350,7 +3350,7 @@ class TrajectoryData:
 
     # Run-scope SelectionBag records, keyed by emitter kind
     # (C++ mangled type name). Per record: frame_idx, time_ps, reason,
-    # metadata dict (decoded from per-record JSON; codex round 1
+    # metadata dict (decoded from per-record JSON; review round 1
     # 2026-05-21 HIGH #4). Empty dict if no selections were pushed.
     selections: Dict[str, List[SelectionRecordPy]] = field(
         default_factory=dict)

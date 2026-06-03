@@ -562,7 +562,7 @@ TEST(LegacyAmberSemanticIntegration, TypedBackboneCacheGlyHa) {
 
 
 // ============================================================================
-// PRO N-terminus pyrrolidine ring preservation — codex Finding 1 regression
+// PRO N-terminus pyrrolidine ring preservation — review Finding 1 regression
 //
 // Cap-table N entries carry RingSystemKind::NotInRing as a placeholder
 // (cap atoms are not in any ring). For PRO at the N-terminus, the chain
@@ -574,7 +574,7 @@ TEST(LegacyAmberSemanticIntegration, TypedBackboneCacheGlyHa) {
 // The fleet_amber fixtures (1Z9B, 1P9J) do not start with PRO, so this
 // regression is exercised on a synthetic fixture built in-test.
 //
-// Post-2026-05-06 codex Finding 1 amendment.
+// Post-2026-05-06 review Finding 1 amendment.
 // ============================================================================
 
 namespace {
@@ -637,7 +637,7 @@ std::unique_ptr<nmr::Protein> MakeNTermProProtein() {
 }  // namespace
 
 // ============================================================================
-// ParseAtomName cap-only flag population — codex Finding 3 single-parse
+// ParseAtomName cap-only flag population — review Finding 3 single-parse
 //
 // `ComposeAtomSemantic` parses each atom name ONCE per atom and dispatches
 // from typed flags. This unit test verifies that `ParseAtomName` populates
@@ -683,7 +683,7 @@ TEST(LegacyAmberSemanticIntegration, ParseAtomNamePopulatesCapOnlyFlags) {
     }
 
     // H2N / OT1 / OT2 are NOT recognised as cap-only (CharmmLegacy
-    // cleanup, codex Finding 2). They parse as element-only sidechain
+    // cleanup, review Finding 2). They parse as element-only sidechain
     // atoms — neither cap-only-n nor cap-only-c.
     for (const std::string& nm : {"H2N", "OT1", "OT2"}) {
         const gen::ParsedAtomName p = gen::ParseAtomName(nm, "");
@@ -716,7 +716,7 @@ TEST(LegacyAmberSemanticIntegration, IsCapOnlyAtomNameDelegatesToParser) {
     EXPECT_FALSE(gen::IsCapOnlyAtomName("CB"));
     EXPECT_FALSE(gen::IsCapOnlyAtomName("HD1"));
 
-    // CharmmLegacy retired (codex Finding 2): H2N / OT1 / OT2 are NOT cap-only.
+    // CharmmLegacy retired (review Finding 2): H2N / OT1 / OT2 are NOT cap-only.
     EXPECT_FALSE(gen::IsCapOnlyAtomName("H2N"));
     EXPECT_FALSE(gen::IsCapOnlyAtomName("OT1"));
     EXPECT_FALSE(gen::IsCapOnlyAtomName("OT2"));
@@ -724,7 +724,7 @@ TEST(LegacyAmberSemanticIntegration, IsCapOnlyAtomNameDelegatesToParser) {
 
 
 // ============================================================================
-// AminoAcid::Unknown with named atoms — codex Finding 4 fail-loud
+// AminoAcid::Unknown with named atoms — review Finding 4 fail-loud
 //
 // `ComposeAtomSemantic` previously skipped Unknown residues silently;
 // their atom slots in the result vector kept default-constructed rows
@@ -788,7 +788,7 @@ std::unique_ptr<nmr::Protein> MakeMixedKnownAndUnknownProtein() {
     return pp;
 }
 
-// Codex Finding F4 (2026-05-06): the prior stub-fixture guard skipped
+// review Finding F4 (2026-05-06): the prior stub-fixture guard skipped
 // AminoAcid::Unknown residues when checking "does this protein have
 // real atom names?" — so an all-Unknown-but-named-atoms protein
 // silently treated as a stub fixture, returning an empty substrate
@@ -830,7 +830,7 @@ TEST_F(LegacyAmberSemanticIntegrationDeathTest, UnknownResidueWithNamedAtomsAbor
         "AminoAcid::Unknown residue.*carries .* named atom");
 }
 
-// Codex Finding F4 (2026-05-06): all-Unknown-but-named-atoms protein
+// review Finding F4 (2026-05-06): all-Unknown-but-named-atoms protein
 // now hits the fail-loud loop instead of the stub-fixture short-circuit.
 TEST_F(LegacyAmberSemanticIntegrationDeathTest, AllUnknownNamedAtomsAborts) {
     auto pp = MakeAllUnknownNamedProtein();
@@ -869,7 +869,7 @@ TEST(LegacyAmberSemanticIntegration, ProNTermPreservesPyrrolidineRing) {
         << "PRO N at NTERM must retain Pyrrolidine_Pro after ApplyCapDelta. "
            "If this fails, ApplyCapDelta is overwriting ring_position from "
            "the cap entry's NotInRing placeholder — see "
-           "LegacyAmberTopology cap-delta composition and codex-review Finding 1.";
+           "LegacyAmberTopology cap-delta composition and review-review Finding 1.";
     EXPECT_EQ(RingPositionLabel::ProRingNitrogen,
               sem_n.ring_position.primary.position)
         << "PRO N retains the Pro-specific ProRingNitrogen ring position "

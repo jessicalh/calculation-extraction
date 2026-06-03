@@ -21,7 +21,7 @@
 //
 // The CHARMM naming/output context (HSD/HSE/HSP, CYS2, ASPP, GLUP,
 // HN/OT1/OT2-style atom names) is retired; the `Charmm` ToolContext
-// slot was removed 2026-05-06 (codex D1). NamingRegistry::ToCanonical
+// slot was removed 2026-05-06 (review D1). NamingRegistry::ToCanonical
 // still recognises HSD/HSE/HSP and CYS2/ASPP/GLUP at INPUT (a
 // CHARMM-prepared file landing in the pipeline still maps onto the
 // standard 3-letter codes); there is no canonical -> CHARMM emitter on
@@ -58,7 +58,7 @@ namespace nmr {
 // CHARMM naming/output support was retired 2026-05-02 (memory entry
 // `project_charmm_retired_amber_only_2026-05-02`); the previous
 // `Charmm` enum value (formerly slot 2: HSD/HSE/HSP, CYS2, ASPP,
-// GLUP, HN) was removed 2026-05-06 (codex Finding D1) after
+// GLUP, HN) was removed 2026-05-06 (review Finding D1) after
 // investigation found zero active production consumers. The numeric
 // slot it occupied is deliberately RETIRED — do not re-use for a
 // different concept; a future full CHARMM naming path can be
@@ -66,7 +66,7 @@ namespace nmr {
 enum class ToolContext {
     Standard = 0,    // PDB / IUPAC canonical names
     Amber    = 1,    // AMBER force fields (ff14SB, ff19SB): HID/HIE/HIP, CYX, ASH, GLH
-    // Charmm = 2  — RETIRED slot, removed 2026-05-06 (codex D1).
+    // Charmm = 2  — RETIRED slot, removed 2026-05-06 (review D1).
     // DO NOT reuse this numeric value for a different concept; if
     // any persisted records contain it they would silently re-bind
     // to an unrelated meaning.
@@ -92,7 +92,7 @@ inline const char* ToolContextName(ToolContext ctx) {
 // the source the rule body actually represents — historic ToolContext
 // labels did not (e.g. the now-retired ToolContext::Charmm slot tagged
 // AMBER pdb2gmx-RTP rules for fleet_amber TPRs, NOT CHARMM force-field
-// naming; ToolContext::Charmm itself was removed 2026-05-06 codex D1).
+// naming; ToolContext::Charmm itself was removed 2026-05-06 review D1).
 // ============================================================================
 
 enum class NamingSource : uint8_t {
@@ -151,7 +151,7 @@ enum class NamingSource : uint8_t {
     /// Currently reserved; no runtime rules tagged here yet.
     ProjectSynthesis         = 9,
 
-    // NOTE: `CharmmLegacy = 5` was removed 2026-05-06 (codex-review
+    // NOTE: `CharmmLegacy = 5` was removed 2026-05-06 (review-review
     // Finding 2). It was never tagged by any active load path; the
     // 3 rules carrying it (HN->H, OT1->O, OT2->OXT) had no live
     // emitter (verified: PdbFileReader / FullSystemReader /
@@ -266,7 +266,7 @@ namespace test {
 // production code never instantiates it. Its sole purpose is to keep
 // the test-only NamingApplicator(custom_rules) constructor private —
 // production callers cannot stumble across it on the public API
-// (codex Finding D3, 2026-05-06). See
+// (review Finding D3, 2026-05-06). See
 // tests/test_naming_applicator_access.h.
 class NamingApplicatorTestAccess;
 }  // namespace test
@@ -327,7 +327,7 @@ private:
     // rule set does not currently reach. NOT for production use;
     // production code calls `GlobalNamingApplicator()`.
     //
-    // Codex Finding D3 (2026-05-06): this constructor is private, only
+    // review Finding D3 (2026-05-06): this constructor is private, only
     // reachable through the friend declaration below; the test code
     // gates entry through nmr::test::NamingApplicatorTestAccess. The
     // production public API does not expose a way to install a
@@ -358,7 +358,7 @@ private:
     /// proposing non-canonical output. Distinct from FailUnresolved
     /// (which fires when no rule fires or a multi-rule conflict has no
     /// documented branch). The diagnostic names every rule that fired,
-    /// the original input, and the bad output. Codex round-2,
+    /// the original input, and the bad output. review round-2,
     /// 2026-05-06.
     [[noreturn]] void FailValidator(
         const NamingContext& ctx,
@@ -421,7 +421,7 @@ private:
 
     void InitialiseStandardResidues();
     void InitialiseAmberContext();
-    // InitialiseCharmmContext() removed 2026-05-06 (codex D1):
+    // InitialiseCharmmContext() removed 2026-05-06 (review D1):
     // CHARMM naming/output support retired; no live consumer needed
     // canonical -> CHARMM residue-name emission.
 };

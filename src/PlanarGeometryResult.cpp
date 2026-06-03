@@ -295,7 +295,7 @@ std::unique_ptr<PlanarGeometryResult> PlanarGeometryResult::Compute(
     // ends. This is the geometry-native substrate: the bond graph is
     // the authoritative answer, label-based heuristics (chain_id,
     // sequence_number, terminal_state, insertion_code) are banned per
-    // the "Backbone connectivity discipline" in OBJECT_MODEL.md.
+    // the "Backbone connectivity discipline" in object model.
     //
     // The query is wrap-correct (cyclic peptide: Successor(N-1) = 0),
     // bonded across antibody insertion codes (100A -> 100B), correct

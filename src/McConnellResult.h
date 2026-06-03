@@ -7,7 +7,7 @@
 // and the symmetric traceless dipolar kernel K. Accumulates per-category
 // totals and tracks nearest CO/CN bonds.
 //
-// The full tensor formula (from GEOMETRIC_KERNEL_CATALOGUE.md):
+// The full tensor formula (from geometric kernel catalogue):
 //
 //   M_ab = 9 cos_theta d_hat_a b_hat_b
 //        - 3 b_hat_a b_hat_b

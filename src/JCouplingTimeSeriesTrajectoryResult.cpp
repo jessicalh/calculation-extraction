@@ -215,7 +215,7 @@ JCouplingTimeSeriesTrajectoryResult::Create(const TrajectoryProtein& tp) {
 // NaN; ALA Hβ deliberately excluded — methyl Cβ is not the methylene
 // observable).
 //
-// Convention -- per codex F6 plus project-sign repair (2026-05-20):
+// Convention -- per review F6 plus project-sign repair (2026-05-20):
 // The four BACKBONE channels (HN-Hα, HN-Cβ, HN-C', Hα-C') feed
 // `(phi + theta_offset)` into the Karplus equation, where phi is the
 // canonical Ramachandran C(prev)-N-CA-C dihedral computed via
@@ -443,7 +443,7 @@ void JCouplingTimeSeriesTrajectoryResult::WriteH5Group(
         "internalizes the Cα-substituent offset in the per-coupling "
         "(A, B, C), so feeding the atomic dihedral matches the "
         "consensus row directly. Backbone form repaired on 2026-05-20 "
-        "(codex F6 + project-sign fix) and checked on 1UBQ by "
+        "(review F6 + project-sign fix) and checked on 1UBQ by "
         "LiteratureAnchoredProbeOn1UBQ. Coefficients defined in "
         "src/PhysicalConstants.h."));
 
@@ -463,7 +463,7 @@ void JCouplingTimeSeriesTrajectoryResult::WriteH5Group(
         ", theta_offset_project=+pi/3 (Vuister & Bax 1993 JACS 115:7772, "
         "DOI 10.1021/ja00070a024); evaluated as J = A*cos^2(phi + "
         "theta_offset) + B*cos(phi + theta_offset) + C. Reference PDF "
-        "references/vuister-lecture-j-couplings.pdf.");
+        "source literature.");
     grp.createAttribute("J_HN_Halpha_Vogeli_coefficients",
         coeff_str(KARPLUS_HN_HA_VOGELI_A, KARPLUS_HN_HA_VOGELI_B,
                   KARPLUS_HN_HA_VOGELI_C) +
@@ -472,14 +472,13 @@ void JCouplingTimeSeriesTrajectoryResult::WriteH5Group(
         "same project theta_offset as J_HN_Halpha (Vogeli eq 5 prints "
         "eta_ik=-pi/3 in the opposite phi convention). Methods-accumulate "
         "alternate parametrization. "
-        "Reference PDF references/vogeli-2007-limits-backbone-dynamics-"
-        "3j-couplings-gb3.pdf (byte-verified 2026-05-19).");
+        "Reference: Vogeli et al. 2007 Table 1 (byte-verified 2026-05-19).");
     grp.createAttribute("J_HN_Cbeta_coefficients",
         coeff_str(KARPLUS_HN_CB_A, KARPLUS_HN_CB_B, KARPLUS_HN_CB_C) +
         ", theta_offset_project=-pi/3 (Wang & Bax 1996 JACS 118:2483, DOI "
         "10.1021/ja9535524, Table 1 NMR/X-ray refined fit row 3, "
         "theta=+60 deg). Reference PDF "
-        "references/wang-bax-1996-karplus-phi-ubiquitin.pdf "
+        "source literature "
         "(byte-verified 2026-05-19).");
     grp.createAttribute("J_HN_Cprime_coefficients",
         coeff_str(KARPLUS_HN_CP_A, KARPLUS_HN_CP_B, KARPLUS_HN_CP_C) +
@@ -487,9 +486,9 @@ void JCouplingTimeSeriesTrajectoryResult::WriteH5Group(
         "10.1021/ja9535524, Table 1 NMR/X-ray refined fit ROW 4, "
         "theta=0 deg). Note B is POSITIVE; J can be slightly negative "
         "at the vertex (~-0.04 Hz; physical). Reference PDF "
-        "references/wang-bax-1996-karplus-phi-ubiquitin.pdf "
+        "source literature "
         "(byte-verified 2026-05-19; row-mapping fixed 2026-05-20 per "
-        "codex F1 -- prior bundle attributed Wang-Bax row 2 (Halpha-C') "
+        "review F1 -- prior bundle attributed Wang-Bax row 2 (Halpha-C') "
         "values (3.75, +2.19, 1.28) to this channel).");
     grp.createAttribute("J_Halpha_Cprime_coefficients",
         coeff_str(KARPLUS_HA_CP_A, KARPLUS_HA_CP_B, KARPLUS_HA_CP_C) +
@@ -499,20 +498,20 @@ void JCouplingTimeSeriesTrajectoryResult::WriteH5Group(
         "peptide bond at the previous-residue's C'; rotation around "
         "N-CA (phi axis). Note B is POSITIVE -- arithmetic max is "
         "f(+1)=A+B+C, vertex (MIN) at u*=-B/(2A). Reference PDFs "
-        "references/wang-bax-1996-karplus-phi-ubiquitin.pdf "
+        "source literature "
         "(byte-verified 2026-05-19) + Vuister teaching lecture "
         "sect 6.1 + Vogeli 2007 page 9384 (3J(C'(i-1), Halpha) "
         "is one of the six phi-related couplings). Row-mapping + "
-        "atom-path fixed 2026-05-20 per codex F1 + F2; prior bundle "
+        "atom-path fixed 2026-05-20 per review F1 + F2; prior bundle "
         "attributed row 4 values + used HA-CA-C-N(next) (psi axis, "
         "wrong observable). Eval form switched to (phi + theta_offset) "
-        "per codex F6 same date.");
+        "per review F6 same date.");
     grp.createAttribute("J_N_Cgamma_coefficients",
         coeff_str(KARPLUS_N_CG_A, KARPLUS_N_CG_B, KARPLUS_N_CG_C) +
         " (Perez, Lohr, Ruterjans & Schmidt 2001 JACS 123:7081, "
         "DOI 10.1021/ja003724j, Table 2 consensus row); dihedral "
         "N-CA-CB-CG (= chi1). Reference PDF "
-        "references/perez-2001-self-consistent-karplus-3j-chi1.pdf "
+        "source literature "
         "(byte-verified 2026-05-19, page 7086).");
     grp.createAttribute("J_Cprime_Cgamma_coefficients",
         coeff_str(KARPLUS_CP_CG_A, KARPLUS_CP_CG_B, KARPLUS_CP_CG_C) +
@@ -521,7 +520,7 @@ void JCouplingTimeSeriesTrajectoryResult::WriteH5Group(
         "C-CA-CB-CG. (Prior commit carried (1.74, -0.57, 0.25); "
         "corrected to Table 2 consensus values at byte-verification "
         "2026-05-19.) Reference PDF "
-        "references/perez-2001-self-consistent-karplus-3j-chi1.pdf "
+        "source literature "
         "(page 7086).");
     grp.createAttribute("J_Halpha_Hbeta_coefficients",
         coeff_str(KARPLUS_HA_HB_A, KARPLUS_HA_HB_B, KARPLUS_HA_HB_C) +
@@ -531,7 +530,7 @@ void JCouplingTimeSeriesTrajectoryResult::WriteH5Group(
         "and J_Halpha_Hbeta3 for the prochiral methylene pair. "
         "Ile/Val/Thr (single methine Hbeta): same atom in both "
         "channels. ALA / GLY: NaN both channels. Reference PDF "
-        "references/perez-2001-self-consistent-karplus-3j-chi1.pdf "
+        "source literature "
         "(byte-verified 2026-05-19, page 7086).");
     grp.createAttribute("dihedral_convention", std::string(
         "Backbone channels: phi = C(prev)-N-CA-C atomic dihedral "
@@ -581,7 +580,7 @@ void JCouplingTimeSeriesTrajectoryResult::WriteH5Group(
         "positions always present at tp.Seed time."));
     grp.createAttribute("source_attached_policy", std::string(
         "always_attached -- source_attached_per_frame trivially all-1 "
-        "for SDK uniformity (OBJECT_MODEL.md Conditional-attach TR "
+        "for SDK uniformity (object model Conditional-attach TR "
         "discipline)."));
 
     // ── Per-frame (T,) ───────────────────────────────────────────────

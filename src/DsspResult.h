@@ -40,7 +40,7 @@ struct DsspResidue {
     // flag, unmapped residues (caps, unmapped chains, insertion-code
     // collisions, DSSP skips) would silently look like real coil "C" —
     // the secondary_structure default, biasing downstream coil
-    // occupancy and helix-dwell statistics. Codex review caught this
+    // occupancy and helix-dwell statistics. review review caught this
     // 2026-05-19; the failure mode is invisible on linear-single-chain
     // test fixtures but real on multi-chain / capped / engineered
     // structures the fleet will see.

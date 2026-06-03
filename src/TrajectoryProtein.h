@@ -1,7 +1,7 @@
 #pragma once
 //
 // TrajectoryProtein: the protein model in trajectory context.
-// Canonical description in OBJECT_MODEL.md (trajectory-scope entities).
+// Canonical description in object model (trajectory-scope entities).
 //
 
 #include "Protein.h"

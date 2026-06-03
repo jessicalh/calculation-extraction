@@ -1,12 +1,12 @@
 #pragma once
 //
 // TrajectoryAtom: per-atom trajectory-scope data store. See
-// OBJECT_MODEL.md (trajectory-scope) and PATTERNS.md §13 + Lesson 25.
+// object model (trajectory-scope) and project conventions §13 + Lesson 25.
 // Private constructor; only TrajectoryProtein constructs via friend.
 //
 // Per-Welford state lives in named substructs (one per writer TR)
 // each holding WelfordMoments instances per channel. See
-// spec/plan/welford-data-shape-design-2026-05-17.md for the design
+// design note for the design
 // rationale. The substruct shape replaced ~136 loose fields of the
 // original pattern; differentiated structure compresses visual
 // surface ~9x without changing memory layout.
@@ -88,7 +88,7 @@ struct BsWelfordState {
     // duplication / identical timestamps / stride misconfig) MUST
     // NOT be zero-filled into the rate accumulator: a bogus 0.0
     // sample biases the running mean toward zero and inflates the
-    // variance accumulator. Per codex finding 2026-05-18 — must be
+    // variance accumulator. Per review finding 2026-05-18 — must be
     // tracked separately from the signed/abs/sq delta accumulators
     // (which legitimately consume every prev_valid_ frame).
     std::size_t    dxdt_n  = 0;
@@ -112,7 +112,7 @@ struct HmWelfordState {
     std::size_t    n_frames = 0;
     std::size_t    delta_n  = 0;
     // dxdt-only counter — see BsWelfordState comment. Skips zero-dt
-    // frames rather than zero-filling. Per codex 2026-05-18.
+    // frames rather than zero-filling. Per review 2026-05-18.
     std::size_t    dxdt_n  = 0;
 };
 
@@ -140,7 +140,7 @@ struct McConnellWelfordState {
     std::size_t    n_frames = 0;
     std::size_t    delta_n  = 0;
     // dxdt-only counter — see BsWelfordState comment. Skips zero-dt
-    // frames rather than zero-filling. Per codex 2026-05-18.
+    // frames rather than zero-filling. Per review 2026-05-18.
     std::size_t    dxdt_n  = 0;
 };
 
@@ -157,7 +157,7 @@ struct EeqWelfordState {
     std::size_t    n_frames = 0;
     std::size_t    delta_n  = 0;
     // dxdt-only counter — see BsWelfordState comment. Skips zero-dt
-    // frames rather than zero-filling. Per codex 2026-05-18.
+    // frames rather than zero-filling. Per review 2026-05-18.
     std::size_t    dxdt_n  = 0;
 };
 
@@ -173,7 +173,7 @@ struct SasaWelfordState {
     std::size_t    n_frames = 0;
     std::size_t    delta_n  = 0;
     // dxdt-only counter — see BsWelfordState comment. Skips zero-dt
-    // frames rather than zero-filling. Per codex 2026-05-18.
+    // frames rather than zero-filling. Per review 2026-05-18.
     std::size_t    dxdt_n  = 0;
 };
 
@@ -245,14 +245,14 @@ struct WaterFieldWelfordState {
 
     std::size_t    n_frames = 0;
     std::size_t    delta_n  = 0;
-    // dxdt-only counter — codex 2026-05-18; skips zero-dt frames.
+    // dxdt-only counter — review 2026-05-18; skips zero-dt frames.
     std::size_t    dxdt_n   = 0;
 };
 
 // State structs for the HydrationGeometry + HydrationShell Welford TRs.
 // Wired into TrajectoryAtom storage below. Land of forward-declarations
 // originally — those declarations matured into the active structs you
-// see now (commits 6931528 + f15b33a, finalized by R6 codex 2026-05-18
+// see now (commits 6931528 + f15b33a, finalized by R6 review 2026-05-18
 // adding `ion_present_fraction` + finite-only `nearest_ion_distance`
 // conditional-Welford counters on HydrationShellWelfordState).
 
@@ -277,7 +277,7 @@ struct HydrationGeometryWelfordState {
     // (asymmetry, alignment, coherence, shell_count). The Vec3 components
     // pick up frame-to-frame change implicitly via their per-component
     // Welford std — no explicit Vec3-component delta tracker needed.
-    // R5 codex 2026-05-18: the previous "polarisation scalars only"
+    // R5 review 2026-05-18: the previous "polarisation scalars only"
     // phrasing was wrong — shell_count IS tracked with delta variants
     // (it's a count, not a polarisation scalar, but the dynamics matter
     // because shell-occupancy fluctuation is the residence-time proxy).
@@ -344,7 +344,7 @@ struct MopacChargeWelfordState {
 // normal), mean_water_dipole_cos, nearest_ion_distance,
 // nearest_ion_charge. All scalar.
 //
-// Nearest-ion conditional Welford (R6 codex 2026-05-18): the source
+// Nearest-ion conditional Welford (R6 review 2026-05-18): the source
 // emits `nearest_ion_distance = +infinity` and `nearest_ion_charge = 0.0`
 // when no ion is within `ion_cutoff` (default 20 Å). Naïvely accumulating
 // +inf into the distance Welford NaN-poisons the running mean for any
@@ -429,7 +429,7 @@ struct HBondCountWelfordState {
     std::size_t    n_frames = 0;
     std::size_t    delta_n  = 0;
     // dxdt-only counter — see BsWelfordState comment. Skips zero-dt
-    // frames rather than zero-filling. Per codex 2026-05-18.
+    // frames rather than zero-filling. Per review 2026-05-18.
     std::size_t    dxdt_n  = 0;
 };
 

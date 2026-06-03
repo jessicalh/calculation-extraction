@@ -49,7 +49,7 @@ public:
     }
 
     // Per-atom slice pointer + length (C++17; std::span would simplify
-    // but is C++20 per PATTERNS.md).
+    // but is C++20 per project conventions).
     T* AtomSlicePtr(size_t atom_idx) {
         return storage_.data() + atom_idx * stride_per_atom_;
     }

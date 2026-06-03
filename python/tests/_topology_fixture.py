@@ -6,7 +6,7 @@ Mirrors the schema declared in ``src/TopologySidecar.cpp``. Used by
 future test that constructs a synthetic extraction directory.
 
 The minimal sidecar is valid but empty: zero bonds, zero rings,
-zero ring memberships. That matches the codex first-pass validation
+zero ring memberships. That matches the review first-pass validation
 gates — an empty axis is valid as long as it's declared.
 """
 
@@ -89,7 +89,7 @@ def write_minimal_topology_sidecar(
 
     Defaults to an empty topology: zero bonds, zero rings, zero
     ring memberships. The axis-size declarations in the manifest
-    still match the protein, so the codex validation invariants
+    still match the protein, so the review validation invariants
     (atom rows == atom axis size, etc.) hold.
     """
     out_dir = Path(out_dir)

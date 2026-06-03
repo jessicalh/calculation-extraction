@@ -37,13 +37,13 @@
 // Output per-atom fields land on ConformationAtom: larsen_hbond_*.
 // NPYs emitted by WriteFeatures.
 //
-// Structural deviation from PATTERNS.md §6: grid-lookup calculators
+// Structural deviation from project conventions §6: grid-lookup calculators
 // like this one have no separable kernel × parameter stage — the DFT
 // grid output IS the calibrated ppm shielding directly. Pattern 11
 // (both Mat3 AND SphericalTensor stored) is satisfied at every
 // per-class field on ConformationAtom.
 //
-// Sign verification (PATTERNS.md §22): transitive via the
+// Sign verification (project conventions §22): transitive via the
 // LarsenHBondGrid loader test `TightHBondGeometryGivesNonzeroHα`,
 // which locks the loader's sign at a known geometry. End-to-end
 // calibrated-sign test against Larsen's published 1UBQ .procs / DFT

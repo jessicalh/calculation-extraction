@@ -35,9 +35,8 @@ consolidated   = ""
 # Each protein dir contains:
 #   sources/                — original PDB, BMRB .str, parsed bmrb_chemistry,
 #                             structure_extracted_*.pdb (the canonical
-#                             reference for atom-name walking, "Authority B"
-#                             per spec/plan/naming-canonical-vocabulary-
-#                             2026-04-30.md). Also pdb_companion_*.pdb
+#                             reference for atom-name walking, "Authority B".
+#                             Also pdb_companion_*.pdb
 #                             (original BMRB-deposited PDB).
 #   decisions.json          — chemistry / titration / ion / pH decisions
 #   validator_report.json   — prep validation
@@ -50,15 +49,15 @@ consolidated   = ""
 fleet_amber    = "tests/data/fleet_amber"
 
 # Per-protein production-trajectory subpath under <fleet_amber>/<id>/.
-# Paths are pinned (no directory discovery / glob — see PATTERNS.md
+# Paths are pinned (no directory discovery / glob — see project conventions
 # "No file discovery"). Append .tpr / .xtc / .edr at the call site.
 # (Note: the deeply nested timestamped-dir convention is unwieldy but
 # reproducibly identifies each dispatch. Update these subpaths when
 # new MD runs replace them.)
 #
-# Round-3 Option B 15 ns runs (2026-05-01):
-fleet_amber_1p9j_5801_subpath = "1P9J_5801/prep_run_20260501T141627Z/batcave_local_15ns_optB_20260501T144807Z/production"
-fleet_amber_1z9b_6577_subpath = "1Z9B_6577/prep_run_20260501T143103Z/batcave_local_15ns_optB_20260501T144823Z/production"
+# Set these subpaths in a local override when large MD fixtures are present.
+fleet_amber_1p9j_5801_subpath = ""
+fleet_amber_1z9b_6577_subpath = ""
 
 # ff14SB parameter file (for tests that create their own ChargeSource)
 ff14sb_params  = "data/ff14sb_params.dat"

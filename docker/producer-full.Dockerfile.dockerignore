@@ -1,13 +1,7 @@
-# Producer source-image context hygiene. The dependency base image already
-# contains docker/vendor; copying it again into the source build stage would
-# add tens of gigabytes of unused context and layers.
-
+# Producer source-image context hygiene
 .git/
 .git-old/
 .cache/
-.claude/
-.codex-skill-dashboard-staging/
-
 CMakeUserPresets.json
 
 build*/
@@ -19,6 +13,8 @@ cmake_install.cmake
 CTestTestfile.cmake
 Makefile
 *.o
+*.a
+*.so
 *.d
 *.npy
 *.mc
@@ -26,48 +22,20 @@ __pycache__/
 *.egg-info/
 *.pyc
 
-artifacts/test_run_*/
-artifacts/quality/*-*.json
-artifacts/quality/*-*.xml
-artifacts/quality/*-*.txt
-artifacts/quality/*-*.sarif
-artifacts/quality/*-*.html
-artifacts/quality/scan-build-*/
-artifacts/quality/clang-tidy-*.json
-artifacts/quality/cppcheck-*.xml
-artifacts/quality/iwyu-*.txt
-
-h5-reader/
-learn/
-analysis-speculative/
-site/
-ui/
-doc/mathematica/
-intermediate/
-meetings/
-papers/
-reviews/
-references/
-references-meta/
-references-text/
-references-images/
-doc-discrepancies/
-
+artifacts/
 bad-builds/
 bones/
-bones-make/
-calibration/*/
 molprobity_runs/
 fileformat/test/**/*.h5
 
-tests/bones/
 tests/data/fleet_amber/
 tests/data/fleet_test_large/
 tests/data/sdk_geo_only/
 tests/golden/smoke/
+tests/golden/blessed/
 
 data/topology/
 data/ccd/*
-!data/ccd/README.md
+data/larsen_hbond_grids/
 
 docker/vendor/

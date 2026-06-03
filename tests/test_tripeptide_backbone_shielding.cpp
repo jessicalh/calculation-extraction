@@ -1,8 +1,7 @@
 // Smoke test for TripeptideBackboneShieldingResult.
 //
-// Loads 1UBQ_pm6dh3plus.pdb (Larsen's PM6-D3H+ optimised geometry —
-// /mnt/expansion/larsen_archive/structures/, the published-RMSD
-// validation target from Larsen 2015) via BuildFromProtonatedPdb,
+// Loads a Larsen PM6-D3H+ optimised 1UBQ geometry, when configured,
+// via BuildFromProtonatedPdb,
 // attaches the dependency chain (Geometry, SpatialIndex, Enrichment),
 // then runs TripeptideBackboneShieldingResult against the local
 // tensorcs15 replica and verifies:
@@ -60,7 +59,7 @@ protected:
             GTEST_SKIP() << "Larsen 1UBQ PM6-D3H+ PDB not found at "
                          << kLarsen1UbqPm6
                          << " (download via larsen ERDA archive — see "
-                            "/mnt/expansion/larsen_archive/README.md)";
+                            "the Larsen archive notes)";
         }
         ASSERT_EQ(session.LoadTripeptideDftTable(), kOk)
             << session.LastError();

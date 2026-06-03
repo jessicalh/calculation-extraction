@@ -6,7 +6,7 @@
 // kernel for a point magnetic dipole at the ring center with its axis along
 // the ring normal.
 //
-// Same derivation as McConnell (GEOMETRIC_KERNEL_CATALOGUE.md) with
+// Same derivation as McConnell (geometric kernel catalogue) with
 // b_hat replaced by ring normal n_hat:
 //
 //   M_ab = 9 cosθ d̂_a n_b - 3 n_a n_b - (3 d̂_a d̂_b - δ_ab)

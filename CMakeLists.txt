@@ -1333,8 +1333,8 @@ target_link_libraries(nmr_pass0_demo PRIVATE nmr_shielding)
 # Links cifpp + RDKit. Reads CCD, runs perception, emits the typed-enum
 # table at src/generated/LegacyAmberSemanticTables.cpp. The runtime
 # library does NOT link RDKit -- the string barrier is enforced by
-# the linker. See tools/topology/README.md and
-# spec/plan/topology-substrate-implementation-plan-2026-05-05.md.
+# the linker. See topology generator notes and
+# design note.
 # ============================================================================
 
 option(NMR_BUILD_TABLE_GENERATOR

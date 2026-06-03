@@ -3,7 +3,7 @@
 // tests/test_naming_applicator_access.h
 //
 // Test-only access shim for NamingApplicator's private constructor.
-// Codex Finding D3 (2026-05-06): the prior round's
+// review Finding D3 (2026-05-06): the prior round's
 // `NamingApplicator::CustomRules` constructor was public — declared
 // "test-only" by comment but reachable from any production caller.
 // This shim restricts test-only construction to friends of

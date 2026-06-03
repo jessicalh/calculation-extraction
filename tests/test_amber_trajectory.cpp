@@ -29,7 +29,7 @@ namespace {
 
 // topol.top sits two directories above production.tpr per the fleet_amber
 // path convention (`<protein>/prep_run_<TS>/topol.top` is the parent of
-// `batcave_local_15ns_optB_<TS>/production.tpr`). Documented convention,
+// the configured production subpath. Documented convention,
 // not file discovery.
 std::string TopolTopPathForFixture(const std::string& tpr_path) {
     return (std::filesystem::path(tpr_path).parent_path().parent_path() /

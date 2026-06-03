@@ -75,7 +75,7 @@ nmr::RunConfiguration BuildWaterFieldConfig(unsigned stride) {
 
 // ============================================================================
 // SYNTHETIC: source-absent path — verifies all-absent → group skipped.
-// R3 codex F5 2026-05-18.
+// R3 review F5 2026-05-18.
 // ============================================================================
 
 TEST(WaterFieldTimeSeries, SyntheticAllAbsentSkipsGroup) {

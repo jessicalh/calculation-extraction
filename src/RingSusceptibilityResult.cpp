@@ -25,7 +25,7 @@ std::vector<std::type_index> RingSusceptibilityResult::Dependencies() const {
 // ============================================================================
 // The full ring-susceptibility tensor kernel from one ring at one atom.
 //
-// Same derivation as McConnell (GEOMETRIC_KERNEL_CATALOGUE.md) with
+// Same derivation as McConnell (geometric kernel catalogue) with
 // b_hat → n_hat (ring normal):
 //
 //   M_ab = 9 cosθ d̂_a n_b  -  3 n_a n_b  -  (3 d̂_a d̂_b - δ_ab)

@@ -119,7 +119,7 @@ TEST(AIMNet2EmbeddingTimeSeries, SyntheticThreeFramesH5RoundTrip) {
     // Spot-check a single (atom, frame, dim) cell. In synthetic mode the
     // ConformationResult is NOT attached, so the TR's HasResult gate
     // correctly emits the NaN placeholder ("absent, not faked",
-    // codex review 2026-05-20); synthetic aimnet2_aim values on
+    // review review 2026-05-20); synthetic aimnet2_aim values on
     // MutableAtom are ignored.
     std::vector<float> buf(N * kFrames * kDim);
     ds.read(buf.data());
@@ -244,7 +244,7 @@ TEST(AIMNet2ChargeResponseGradientTimeSeries, SyntheticThreeFramesH5RoundTrip) {
 
     // Synthetic mode: no ConformationResult attached, so the gate
     // emits NaN placeholders for both vector and scalar ("absent,
-    // not faked", codex review 2026-05-20).
+    // not faked", review review 2026-05-20).
     std::vector<double> vbuf(N * kFrames * 3);
     std::vector<double> sbuf(N * kFrames);
     ds_vec.read(vbuf.data());
@@ -362,7 +362,7 @@ TEST(AIMNet2ChargeResponseGradientWelford, SyntheticThreeFramesSkipsGroupOnAbsen
 
 // ============================================================================
 // INTEGRATION: real AIMNet2 CRG kernel through Trajectory::Run, multi-frame.
-// Codex F4 2026-05-20 — exercises the actual Welford accumulation path
+// review F4 2026-05-20 — exercises the actual Welford accumulation path
 // against per-frame AIMNet2 backward-pass gradients. Skips when CUDA /
 // model unavailable. The synthetic-positions accumulation path cannot
 // be exercised here because TrajectoryProtein::Seed FATALs on all-zero

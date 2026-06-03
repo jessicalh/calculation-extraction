@@ -424,7 +424,7 @@ std::unique_ptr<LarsenHBondShieldingResult> LarsenHBondShieldingResult::Compute(
     // of O(i-1) but at θ ≈ 20° (the i,i geometry of the chain), which is
     // anti-bonded, not an H-bond. Gating on classification-only would
     // suppress the water term for every amide H regardless of solvent
-    // exposure (codex finding F2, 2026-05-12).
+    // exposure (review finding F2, 2026-05-12).
     std::vector<bool> amide_h_geometric_paired(n_atoms, false);
 
     // n_pairs_grid_skipped counts every processed candidate that the
@@ -789,7 +789,7 @@ std::unique_ptr<LarsenHBondShieldingResult> LarsenHBondShieldingResult::Compute(
             // scanned the acetate grid with one O fixed as the
             // H-bond acceptor — only the closer-to-donor O is the real
             // H-bond. Skip the further sibling here so the closer one
-            // processes in its own iteration (codex finding F3,
+            // processes in its own iteration (review finding F3,
             // 2026-05-12). Tie-break by atom index when equidistant so
             // exactly one of the two processes. The closer-to-donor O
             // is also the one whose `third` (the OTHER O on the same C)

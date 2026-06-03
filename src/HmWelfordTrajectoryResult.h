@@ -7,7 +7,7 @@
 // rollups stay side-by-side per `feedback_methods_accumulate`.
 //
 // Source: `ConformationAtom::hm_shielding_contribution` (units = Å⁻¹,
-// rank-1 same as BS but no PPM_FACTOR multiplier — see OBJECT_MODEL.md
+// rank-1 same as BS but no PPM_FACTOR multiplier — see object model
 // contract drift table). HaighMallionResult is unconditionally
 // attached in `PerFrameExtractionSet`, so the dep is enforced via
 // `Dependencies()`.
@@ -17,7 +17,7 @@
 // amplitude rollup discards; T0 delta/rate variants distinguish drift,
 // |Δ|, Δ² → RMS fluctuation, and cadence-normalized Δ/Δt. Per
 // PATTERNS Lesson 25 (Export Everything Upstream). See
-// spec/plan/welford-data-shape-design-2026-05-17.md.
+// design note.
 //
 
 #include "TrajectoryResult.h"

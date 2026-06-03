@@ -185,7 +185,7 @@ void RingNeighbourhoodTrajectoryStats::Finalize(
         return;
     }
 
-    // **Idempotency** (codex round 1 2026-05-21 HIGH finding,
+    // **Idempotency** (review round 1 2026-05-21 HIGH finding,
     // `feedback_bounds_check_over_state_flag`): the per-atom buffers
     // are swapped EMPTY at the end of the first Finalize call (we
     // move them into the DenseBuffer's storage). A second Finalize

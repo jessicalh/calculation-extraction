@@ -64,7 +64,7 @@ void MopacBondOrderWelfordTrajectoryResult::Compute(
     // Invariant-failure (size mismatch) is treated as "frame absent"
     // for accounting — mask=0 + source_attached_count_ unchanged —
     // so the H5 per-bond divisor stays consistent with the actual
-    // sample count (codex 2026-05-21 finding 3).
+    // sample count (review 2026-05-21 finding 3).
     bool did_update = false;
     if (conf.HasResult<MopacResult>()) {
         const auto& mopac = conf.Result<MopacResult>();
@@ -171,7 +171,7 @@ void MopacBondOrderWelfordTrajectoryResult::WriteH5Group(
         "indicator-Welford updates EVERY MOPAC-attached frame with a "
         "1.0/0.0 indicator. Mirrors the HydrationShellWelford "
         "ion_present_fraction pattern per "
-        "feedback_conditional_welford_for_sentinels (R6 codex "
+        "feedback_conditional_welford_for_sentinels (R6 review "
         "2026-05-18) — naive accumulation of the 0.0 sentinel "
         "biases the order mean toward 0 for intermittently-reported "
         "bonds (typical for MOZYME-merged sidechain interior bonds)."));
@@ -216,7 +216,7 @@ void MopacBondOrderWelfordTrajectoryResult::WriteH5Group(
     // Bond-order is dimensionless; m2 is dimensionless squared
     // (still dimensionless, but using the squared label per the
     // canonical convention to keep readers aware of the m2 vs base
-    // scaling — codex H3 2026-05-20).
+    // scaling — review H3 2026-05-20).
     with_units(grp.createDataSet("order_mean",      mean),      std::string("dimensionless"));
     with_units(grp.createDataSet("order_std",       std_),      std::string("dimensionless"));
     with_units(grp.createDataSet("order_m2",        m2),        std::string("dimensionless^2"));

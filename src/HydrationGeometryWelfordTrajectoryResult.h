@@ -16,7 +16,7 @@
 //   dipole_coherence      scalar (e·Å, `|Σd|/n`)       full Welford + delta variants
 //   shell_count           int (dimensionless)          full Welford + delta variants
 //
-// R6 codex 2026-05-18: dipole_coherence is NOT a dimensionless order
+// R6 review 2026-05-18: dipole_coherence is NOT a dimensionless order
 // parameter despite the name — source formula `|Σd_i| / n_shell` has
 // e·Å units. A true coherence (dimensionless [0,1]) would divide by
 // `Σ |d_i|` instead. Consumers can post-process if needed.

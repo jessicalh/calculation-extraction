@@ -52,7 +52,7 @@ constexpr int kFingerprintResidueNumber = 28;
 const std::string kFingerprintChainId = "A";
 
 // McConnell kernel magnitude bound. Per
-// PATTERNS.md "Near-field stability per kernel": dipolar kernel M_ab/r^3
+// project conventions "Near-field stability per kernel": dipolar kernel M_ab/r^3
 // near-field filter caps T2 around 1 A^-3. 10 A^-3 is a generous sanity
 // bound that catches runaway numerics.
 constexpr double kT0SanityBoundA3 = 10.0;

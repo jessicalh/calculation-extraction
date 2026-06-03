@@ -43,7 +43,7 @@ char ResidueOneLetterCode(AminoAcid type) {
 // Protein::BackboneConnected query (covalent C-N bond graph). chain_id
 // matching was an ad-hoc inference that missed within-chain numbering
 // gaps with intact bonds, antibody insertion-coded structures, and
-// cyclic peptides. See PATTERNS.md + OBJECT_MODEL.md "Backbone
+// cyclic peptides. See project conventions + object model "Backbone
 // connectivity discipline" + commit log for the substrate-correction
 // sweep.
 

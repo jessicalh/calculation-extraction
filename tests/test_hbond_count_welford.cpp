@@ -52,7 +52,7 @@ bool FixtureAvailable(const nmr::test::AmberTrajectoryFixture& fix) {
 }
 // Per-file bridge to the shared TestConfig profile system. HBondResult
 // requires DsspResult; KernelWithDssp profile is the right pick. See
-// spec/plan/test-suite-realignment-deferred-2026-05-17.md.
+// design note.
 void BuildBaseConfig(nmr::RunConfiguration& config, const std::string& name, std::size_t stride) {
     config = nmr::test::BuildTestConfig(nmr::test::TestProfile::KernelWithDssp, name, stride);
     config.RequireConformationResult(typeid(nmr::HBondResult));
@@ -191,7 +191,7 @@ TEST(HBondCountWelford, Integration1P9J) {
     EXPECT_GT(populated, 0u)
         << "HBondCount all-zero — HBondResult or DsspResult not firing";
 
-    // Codex 2026-05-18: dxdt_n must equal delta_n on a well-formed
+    // review 2026-05-18: dxdt_n must equal delta_n on a well-formed
     // trajectory (no duplicated-timestamp frames). Regression guard
     // for the separate-counter fix that skips zero-dt frames rather
     // than zero-filling the rate accumulator.

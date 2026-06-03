@@ -100,7 +100,7 @@ void BsWelfordTrajectoryResult::Compute(
             // Cadence-normalized rate uses its OWN counter — only
             // meaningful samples accumulate. dt ≤ MIN_DT_PS (frame
             // duplication / identical timestamps / stride misconfig)
-            // is SKIPPED, NOT zero-filled. Per codex 2026-05-18:
+            // is SKIPPED, NOT zero-filled. Per review 2026-05-18:
             // zero-filling biases the running mean toward zero and
             // inflates the variance accumulator. 1e-12 ps is well
             // below any physical sampling rate.
@@ -140,7 +140,7 @@ void BsWelfordTrajectoryResult::Finalize(TrajectoryProtein& tp,
         WelfordFinalize(w.t0_abs_delta,     w.delta_n);
         WelfordFinalize(w.t0_delta_squared, w.delta_n);
         // dxdt is finalised against its OWN counter — only frames with
-        // dt > MIN_DT_PS contributed (codex 2026-05-18). WelfordFinalize
+        // dt > MIN_DT_PS contributed (review 2026-05-18). WelfordFinalize
         // NaN-fills mean/m2/std when n==0, so the all-zero-dt edge case
         // surfaces as NaN downstream rather than a misleading mean=0.
         WelfordFinalize(w.t0_dxdt,          w.dxdt_n);
@@ -415,7 +415,7 @@ void BsWelfordTrajectoryResult::WriteH5Group(
     dn_ds.createAttribute("units", std::string("frame_count"));
     // dxdt_n_per_atom: per-atom count of VALID-dt dxdt samples.
     // Equals delta_n on well-formed trajectories; diverges when frame
-    // duplication / identical-timestamp rows are present (codex 2026-05-18).
+    // duplication / identical-timestamp rows are present (review 2026-05-18).
     // Lets downstream verify dxdt sample population separately and
     // detect trajectories with high frame-duplication.
     auto dxdtn_ds = grp.createDataSet("dxdt_n_per_atom", dxdt_n);

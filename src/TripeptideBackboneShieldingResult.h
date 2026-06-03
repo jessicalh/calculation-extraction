@@ -29,7 +29,7 @@
 //
 // Substrate gates: typed LarsenResidue perception on the DFT side and
 // LegacyAmberTopology::SemanticAt typed identity on the protein side.
-// NO string comparisons on atom names. Per PATTERNS.md
+// NO string comparisons on atom names. Per project conventions
 // anti-string-traversal.
 //
 // Per-atom storage on ConformationAtom (T2 sacred):

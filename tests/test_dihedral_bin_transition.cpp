@@ -228,7 +228,7 @@ TEST(DihedralBinTransition, Integration1P9J) {
     // (1) Sum of bin occupancy across non-unassigned bins equals
     //     n_frames_observed for each residue.
     // (2) Sum of ALL bin occupancy (including unassigned bin 0) equals
-    //     T — every frame accounted for (codex-review-2026-05-19 fix).
+    //     T — every frame accounted for (review-review-2026-05-19 fix).
     // (3) transition_count <= n_frames_observed (transitions can occur
     //     at most once per consecutive observed-frame pair).
     // (4) For non-N-term, non-C-term residues on 1P9J (linear single-

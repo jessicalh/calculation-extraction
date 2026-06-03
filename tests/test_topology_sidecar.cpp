@@ -11,7 +11,7 @@
 //   5. extraction_manifest.json contains the expected top-level keys and
 //      axis-size fields.
 //   6. Each bond's atom_index_a / atom_index_b < AtomCount() (boundary
-//      sanity at the byte level — codex's first-pass validation gate).
+//      sanity at the byte level — review's first-pass validation gate).
 //
 
 #include <gtest/gtest.h>
@@ -155,7 +155,7 @@ TEST_F(TopologySidecarTest, RingMembershipAxisCountMatchesTopology) {
 }
 
 // ============================================================================
-// Bond endpoint sanity (codex first-pass validation gate)
+// Bond endpoint sanity (review first-pass validation gate)
 // ============================================================================
 
 TEST_F(TopologySidecarTest, BondEndpointsAreWithinAtomAxis) {
@@ -258,7 +258,7 @@ TEST_F(TopologySidecarTest, IdempotentRewrite) {
 // ============================================================================
 
 // Hand-rolled "value-after-key" extractor for the flat axis_sizes block.
-// Codex's JSON manifest is project-controlled; full JSON parsing is
+// review's JSON manifest is project-controlled; full JSON parsing is
 // overkill for a self-emitted format.
 int ExtractAxisSize(const std::string& j, const std::string& axis) {
     const std::string needle = "\"" + axis + "\":";
@@ -311,7 +311,7 @@ TEST_F(TopologySidecarTest, ManifestEnumVocabPresent) {
     const std::string j = ReadFileText(dir_ / "extraction_manifest.json");
     ASSERT_FALSE(j.empty());
 
-    // enum_vocab block resolves codex's enum_vocab_refs requirement.
+    // enum_vocab block resolves review's enum_vocab_refs requirement.
     // Consumers reading bond_order == 4 need to know that's Peptide.
     EXPECT_NE(j.find("\"enum_vocab\""), std::string::npos);
     EXPECT_NE(j.find("\"terminal_state\""), std::string::npos);

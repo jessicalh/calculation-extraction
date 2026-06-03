@@ -55,7 +55,7 @@ static std::unique_ptr<nmr::Protein> LoadTestProtein(const std::string& protein_
 
 // BuildFromOrca records the preparation provenance on the Protein's
 // build context. Relocated here from the retired test_protonation_pipeline
-// (the only coverage of build-context provenance — codex review 2026-05-25).
+// (the only coverage of build-context provenance — review review 2026-05-25).
 TEST(OrcaLoaderProvenanceTest, BuildContextRecordsTleapFf14SB) {
     nmr::OrcaRunFiles files;
     const std::string dir = std::string(nmr::test::TestEnvironment::OrcaDir());

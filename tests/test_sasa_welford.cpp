@@ -50,7 +50,7 @@ bool FixtureAvailable(const nmr::test::AmberTrajectoryFixture& fix) {
         && fs::exists(TrrPathFor(fix.tpr_path)) && fs::exists(fix.edr_path);
 }
 // Per-file bridge to the shared TestConfig profile system. See
-// spec/plan/test-suite-realignment-deferred-2026-05-17.md.
+// design note.
 void BuildBaseConfig(nmr::RunConfiguration& config, const std::string& name, std::size_t stride) {
     config = nmr::test::BuildTestConfig(nmr::test::TestProfile::KernelOnly, name, stride);
     config.RequireConformationResult(typeid(nmr::SasaResult));
@@ -182,7 +182,7 @@ TEST(SasaWelford, Integration1P9J) {
     }
     EXPECT_GT(populated, 0u);
 
-    // Codex 2026-05-18: dxdt_n must equal delta_n on a well-formed
+    // review 2026-05-18: dxdt_n must equal delta_n on a well-formed
     // trajectory (no duplicated-timestamp frames). Regression guard
     // for the separate-counter fix that skips zero-dt frames rather
     // than zero-filling the rate accumulator.

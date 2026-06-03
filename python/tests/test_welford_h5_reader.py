@@ -667,7 +667,7 @@ class TestTrajectoryWithoutWelfordGroups:
         assert traj.welford.hbond_count is None
 
 
-# ─── M2 units honesty (codex MEDIUM finding 2026-05-18) ─────────────
+# ─── M2 units honesty (review MEDIUM finding 2026-05-18) ─────────────
 
 
 class TestPerDatasetM2Units:
@@ -757,7 +757,7 @@ class TestProductionSchema:
 
 
 class TestDxdtNPerAtom:
-    """`dxdt_n_per_atom` is a new H5 dataset (codex 2026-05-18 fix). It
+    """`dxdt_n_per_atom` is a new H5 dataset (review 2026-05-18 fix). It
     tracks the count of VALID-dt samples that contributed to the dxdt
     accumulator — distinct from `delta_n_per_atom` because zero-dt
     frames are skipped rather than zero-filled.
@@ -788,7 +788,7 @@ class TestDxdtNPerAtom:
         assert hb.dxdt_n_per_atom.shape == (N_ATOMS,)
 
     def test_legacy_h5_without_dxdt_n_falls_back_to_delta_n(self, tmp_path):
-        """Older H5 files (pre-codex-fix) don't have dxdt_n_per_atom.
+        """Older H5 files (pre-review-fix) don't have dxdt_n_per_atom.
         Reader falls back to delta_n_per_atom and the dataclass still
         constructs."""
         path = tmp_path / "trajectory.h5"

@@ -8,8 +8,8 @@
 // tensorcs15, the smoke test would still pass but THIS test catches
 // the drift by going back to the source.
 //
-// Skipped if the Larsen ERDA archive isn't present at the expected
-// path. The archive lives at /mnt/expansion/larsen_archive/.
+// Skipped unless NMR_LARSEN_AAA_LOG points at the external Larsen
+// Gaussian log fixture.
 
 #include "TestEnvironment.h"
 #include <gtest/gtest.h>
@@ -20,6 +20,7 @@
 #include "Types.h"
 
 #include <cstdio>
+#include <cstdlib>
 #include <filesystem>
 #include <fstream>
 #include <regex>
@@ -33,9 +34,10 @@ namespace fs = std::filesystem;
 
 namespace {
 
-constexpr const char* kAaaLog =
-    "/mnt/expansion/williamsproject/procs15_data/nmrlogs/AAAnmrlog/"
-    "AAA_4_54_nmr.log";
+fs::path AaaLogPath() {
+    const char* env = std::getenv("NMR_LARSEN_AAA_LOG");
+    return (env && *env) ? fs::path(env) : fs::path();
+}
 
 // Parse the LAST "Standard orientation:" block from a Gaussian log and
 // return per-atom records. Mirrors the parser in
@@ -111,12 +113,9 @@ ParseStandardOrientation(const fs::path& log_path) {
 class LarsenResidueAgainstSourceLogTest : public ::testing::Test {
 protected:
     void SetUp() override {
-        if (!fs::exists(kAaaLog)) {
-            GTEST_SKIP() << "AAA Gaussian log not found at "
-                         << kAaaLog
-                         << " — set up the larsen archive copy via "
-                            "/mnt/expansion/williamsproject/procs15_data/"
-                            "nmrlogs/AAAnmrlog/ before running this test.";
+        const fs::path log_path = AaaLogPath();
+        if (log_path.empty() || !fs::exists(log_path)) {
+            GTEST_SKIP() << "AAA Gaussian log fixture not configured; set NMR_LARSEN_AAA_LOG";
         }
     }
 };
@@ -126,7 +125,7 @@ protected:
 // perceive, and verify the 5-piece structure is recovered.
 TEST_F(LarsenResidueAgainstSourceLogTest, AaaLogPerceivesCleanly) {
     const std::vector<TripeptideDftAtom> log_atoms =
-        ParseStandardOrientation(kAaaLog);
+        ParseStandardOrientation(AaaLogPath());
 
     // AAA = ACE 6 + N-cap ALA 10 + central ALA 10 + C-cap ALA 10 +
     //       NME 6 = 42 atoms.

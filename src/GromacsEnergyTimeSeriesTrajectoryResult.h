@@ -21,7 +21,7 @@
 //
 // Export-everything-upstream (PATTERNS Lesson 25): emit every column of
 // the GromacsEnergy struct as its own dataset, including the 3×3 virial
-// and pressure tensors. Storage at thesis scale is negligible; removed
+// and pressure tensors. Storage at analysis scale is negligible; removed
 // columns are forever, added ones are free.
 //
 // Emission:

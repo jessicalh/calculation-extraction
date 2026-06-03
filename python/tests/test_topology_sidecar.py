@@ -277,7 +277,7 @@ class TestStrictLoad:
 
 
 class TestValidationInvariants:
-    """SDK enforces the codex first-pass validation gates at load time."""
+    """SDK enforces the review first-pass validation gates at load time."""
 
     def test_axis_size_mismatch_raises(self, tmp_path):
         _required_identity_npys(tmp_path, N_ATOMS)

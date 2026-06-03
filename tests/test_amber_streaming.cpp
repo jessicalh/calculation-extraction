@@ -196,7 +196,7 @@ TEST(AmberStreaming, BondLengthStatsEndToEnd) {
 
 
 // ============================================================================
-// BondLengthStats discipline trio. Pattern from spec/INDEX.md:
+// BondLengthStats discipline trio. Pattern from design note:
 //   - frame-0 semantics (stride ≥ fixture length so only frame 0 dispatches)
 //   - Finalize idempotency
 //   - H5 round-trip via a temp file

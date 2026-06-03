@@ -1,212 +1,50 @@
+# Build products and CMake state
 build/
-build-ui/
-build-check/
-build-forensic/
-build-gen/
-build-asan/
-
-# Machine-local CMake preset overrides (dependency roots, install
-# prefix). Copy CMakeUserPresets.example.json -> CMakeUserPresets.json
-# and edit for this machine; the copy is never committed.
-CMakeUserPresets.json
-
-# Independent non-producer workspaces kept on disk. Ignored so local
-# analysis/generated/site files stay out of producer packaging status.
-learn/
-analysis-speculative/
-site/
-ui/
-
-# Local thesis/draft work pending the private-docs split. These are not
-# release inputs for nmr-extract or h5-reader.
-doc/mathematica/
-intermediate/
-meetings/
-papers/annotated-bib/*AutoRecovered*
-
-# Local agent/tool caches and staging directories.
-.cache/
-.codex-skill-dashboard-staging/
-
-# Prompt library — lab-notebook retrospectives of the prompts/briefs we build and
-# tune (purpose + what was good + what we tuned). Process, not product; the live
-# prompt files live where they are used (mostly doc/calculators/).
-prompts/
-
-# doc/calculators: LaTeX build intermediates and codex prompt/log scratch.
-# The .tex / .md / .sty / .pdf / .mmd deliverables ARE committed.
-doc/calculators/*.aux
-doc/calculators/*.log
-doc/calculators/*.out
-doc/calculators/*.toc
-doc/calculators/*.fls
-doc/calculators/*.fdb_latexmk
-doc/calculators/*.listing
-doc/calculators/.codex-*
-
-# Static-analysis output. Reports (clang-tidy / cppcheck / IWYU /
-# scan-build) regenerate on demand; per-sha snapshots can grow large.
-# baseline.json itself IS committed (it's the ratchet anchor); the
-# per-sha snapshots and HTML/JSON reports under artifacts/quality/
-# are derived state. Gitignore does not support brace expansion; keep
-# the extensions explicit.
-artifacts/quality/*-*.json
-artifacts/quality/*-*.xml
-artifacts/quality/*-*.txt
-artifacts/quality/*-*.sarif
-artifacts/quality/*-*.html
-artifacts/quality/scan-build-*/
-artifacts/quality/clang-tidy-*.json
-artifacts/quality/cppcheck-*.xml
-artifacts/quality/iwyu-*.txt
-!artifacts/quality/baseline.json
-!artifacts/quality/README.md
-artifacts/test_run_*/
+build-*/
+build*/
 Testing/
-*.o
-*.a
-*.so
-*.d
-.~lock.*
+_deps/
 CMakeCache.txt
 CMakeFiles/
 cmake_install.cmake
 Makefile
 CTestTestfile.cmake
-*.npy
-
-# Quarantined stray-root CMake tree — see bones-make/README.md.
-# Ignored archive/local state, not an active build tree.
-bones-make/
-
-# Archive/bones directories are not active producer material. They are kept on
-# disk as ignored local archive; if a tracked file appears here, untrack it
-# explicitly rather than depending on it from active code or docs.
-bones/
-
-# Stray-root build artefacts. Build trees belong in build*/ directories,
-# never the repo root. If these files appear at root, something configured
-# CMake in the wrong place; ignore so git status doesn't notice.
-/*_tests
-/*_tests[1]_include.cmake
-/*_tests[1]_tests.cmake
+*_tests
+*_tests[1]_include.cmake
+*_tests[1]_tests.cmake
 /nmr_extract
-/nmr-viewer
 /nmr_pass0_demo
-/nmr-viewer_autogen/
-/detect_cuda_compute_capabilities.cu
-/detect_cuda_version.cc
-/leap.log
-
-# Python
-__pycache__/
-*.egg-info/
-*.pyc
-python/doc/_build/
-
-# Generated documentation (doxygen, sphinx)
-doc/generated/
-ui/doc/generated/
-
-# Large calibration data — regenerable from consolidated/ via batch_extract.sh
-calibration/*/
-
-# MOPAC/APBS solver output
+*.o
+*.a
+*.so
+*.d
+*.npy
 *.mc
+leap.log
 
-# Smoke test output. Timestamped runs are generated. Existing tracked blessed
-# baselines remain tracked; new blessed files under this ignored tree require
-# an explicit `git add -f`.
+# Local machine configuration and tool caches
+CMakeUserPresets.json
+.cache/
+.qt/
+__pycache__/
+*.pyc
+*.egg-info/
+
+# Generated reports, archives, and large local fixtures
+artifacts/
+bad-builds/
+bones/
+molprobity_runs/
+fileformat/test/**/*.h5
+tests/data/fleet_amber/
+tests/data/fleet_test_large/
+tests/data/sdk_geo_only/
 tests/golden/smoke/
 tests/golden/blessed/
 
-# Build artifacts (CMake fetch)
-_deps/
-CTestTestfile.cmake
-.qt/
-
-# HighFive: only include/ is needed; ignore the rest of the upstream tree
-extern/HighFive/CMake/
-extern/HighFive/CMakeLists.txt
-extern/HighFive/CHANGELOG.md
-extern/HighFive/README.md
-extern/HighFive/codecov.yml
-extern/HighFive/doc/
-extern/HighFive/src/
-extern/HighFive/tests/
-extern/HighFive/deps/
-extern/HighFive/.*
-
-# Stale git backup
-.git-old/
-
-# Claude Code per-session metadata (worktrees, shell history) — machine-local.
-.claude/
-
-# Analysis H5 fixtures — regenerable via nmr_extract --trajectory --analysis;
-# individual files are 1-3 GB, total ~42 GB. Will not fit on GitHub.
-fileformat/test/**/*.h5
-
-# Salvaged artifact area from older builds — ELF binaries, moc
-# generated files, CMakeCache, .mc solver output. Kept on disk for
-# reference, not committed. Checked-in binaries go stale the moment
-# they're pushed, and moc/CMake artifacts are regenerable noise.
-bad-builds/
-
-# Large test fixtures — MD trajectories (md.xtc ~18 MB each,
-# 5 walkers), PLUMED grids (110K lines each), reference PDBs.
-# Total ~295 MB. Regenerable from initial-samples/ via the fleet
-# pipeline; machine-local, not repo material.
-tests/data/fleet_test_large/
-tests/bones/
-
-# AMBER-ff GROMACS straight-relaxation MD trajectories used for trajectory
-# tests (1P9J_5801 + 1Z9B_6577). Per-protein full pipeline output includes
-# sources/, decisions.json, validator_report.json, equilibration, relaxation,
-# and production runs. Large and machine-local; not repo material.
-tests/data/fleet_amber/
-
-# Geometry-only SDK fixture (1Q8K extraction, ~137 MB).
-# Used by python/tests/test_load.py as GEO_ONLY. Regenerable via
-# `nmr_extract` against a fleet pose; machine-local, not repo material.
-tests/data/sdk_geo_only/
-
-# MolProbity validation runs — per-frame PDBs + trajectory.h5 +
-# validation outputs from FramePdbEmitter + tools/molprobity_validate.py.
-# Multi-GB per protein, regenerable from tests/data/fleet_amber/ +
-# the wrapper script; machine-local, not repo material. Persistent
-# paper-archival copies live at /shared/2026Thesis/paper_archive/.
-molprobity_runs/
-
-# Reference-corpus derived files. These are local/private-docs material,
-# not release inputs; regenerate from PDFs when needed.
-references-text/
-references-images/
-
-# Literature corpus + metadata. Docs-private, kept on disk only pending the
-# private-docs-repo split; not release inputs for nmr-extract or h5-reader.
-# Untracked from git 2026-05-29 (the small runtime/test dependency that used
-# to live here is now data/bmrb_atom_nom.tbl).
-references/
-references-meta/
-
-# Doc-truthfulness audit scaffolding — transient working trackers for the
-# comment/doc campaign (memory project_docs_single_source_of_truth). Helps
-# locally; not producer material. Untracked from git 2026-05-29.
-doc-discrepancies/
-
-# Regenerable topology dumps (e.g. tripeptide_orderings_dump.json, produced
-# from the gotham DB by scripts/dump_tripeptide_orderings.py). Derived data.
+# Regenerable reference data and dependency payloads
 data/topology/
-
-# PDB Chemical Component Dictionary — reference data, freely
-# re-fetchable from wwPDB. ~376 MB uncompressed; see
-# data/ccd/README.md for fetch command.
 data/ccd/*
-!data/ccd/README.md
-
-# Larsen 2015 ProCS15 H-bond DFT grids — regenerable from
-# /mnt/expansion/larsen_archive/hydrogenbondnmrlogs.tar via
-# scripts/larsen_hbond_grid_parse/parse_larsen_hbond_grids.py.
-# ~10 MB total (6 archive grids).
 data/larsen_hbond_grids/
+docker/vendor/deps/
+docker/vendor/*.tar*

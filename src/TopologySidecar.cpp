@@ -39,7 +39,7 @@ namespace {
 // ── NPY 1.0 writer ────────────────────────────────────────────────
 //
 // Same layout as CategoryInfoProjection.cpp::WriteStructuredNpy. Kept
-// local rather than refactored into a shared utility (PATTERNS.md
+// local rather than refactored into a shared utility (project conventions
 // "Duplication is preferred over chaining" + "The utility namespace"
 // anti-pattern) — three independent emitters with stable shapes.
 //
@@ -96,7 +96,7 @@ bool WriteStructuredNpy(const fs::path& path,
 
 // ── Residues emission ─────────────────────────────────────────────
 //
-// One row per Residue. Codex contract item: "Residue Table Minimum"
+// One row per Residue. review contract item: "Residue Table Minimum"
 // plus prev/next links and Markley-style 1-letter / 3-letter
 // renderings.
 //
@@ -510,7 +510,7 @@ bool WriteManifest(const Protein& protein, const fs::path& out_dir,
     // enum_vocab — integer-to-name mapping for the typed enum columns in
     // residues.npy / bonds.npy / rings.npy so a consumer reading
     // `bond_order == 4` knows it's `Peptide` without grepping the source.
-    // Per codex contract `enum_vocab_refs`. Mirrors:
+    // Per review contract `enum_vocab_refs`. Mirrors:
     //   ResidueTerminalState (Residue.h), BondOrder / BondCategory /
     //   RingTypeIndex / AminoAcid (Types.h).
     j["enum_vocab"] = nlohmann::ordered_json{

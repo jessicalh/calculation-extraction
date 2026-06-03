@@ -8,7 +8,7 @@
 // field name, the source calc (PiQuadrupoleResult) stores the
 // decomposed GEOMETRIC KERNEL, not the parameterised ppm shielding.
 // Pre-existing naming drift across most classical calcs — see
-// OBJECT_MODEL.md "Calculator Shielding Contribution Contract drift".
+// object model "Calculator Shielding Contribution Contract drift".
 // Units: G tensor is Å⁻⁵; the related Buckingham scalar A-term is
 // Å⁻⁴, so do not confuse the two.
 //

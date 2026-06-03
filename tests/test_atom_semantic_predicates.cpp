@@ -3,7 +3,7 @@
 // Unit tests for the compositional predicates on AtomSemanticTable.
 // Specifically covers the three predicates added to support the
 // LarsenHBondGrid HBondHα design (see
-// spec/plan/larsen-hbond-shielding-design-2026-05-11.md §"Substrate
+// design note §"Substrate
 // predicate additions"):
 //
 //   - IsAnyAlphaHydrogen        — non-GLY HA + GLY HA2/HA3

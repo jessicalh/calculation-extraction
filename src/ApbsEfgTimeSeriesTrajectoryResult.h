@@ -13,7 +13,7 @@
 // HasResult<ApbsFieldResult>() gate is defensive and
 // source_attached_per_frame is all-1. The gate + per-frame mask +
 // NaN-fill on absence is still emitted for SDK uniformity per
-// OBJECT_MODEL.md "Conditional-attach TR discipline" subsection
+// object model "Conditional-attach TR discipline" subsection
 // (2026-05-19; all-1 + source_attached_policy="always_attached").
 //
 // Emission (T2-only — APBS EFG is the symmetrized, trace-projected

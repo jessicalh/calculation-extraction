@@ -89,7 +89,7 @@ class ArraySpec:
       shieldings (rank 2 even) and most scalars are even, vector
       fields like E and B are odd.
 
-    * ``mechanism`` is a thesis-narrative grouping over physics:
+    * ``mechanism`` is a analysis grouping over physics:
       ``ring_current`` / ``ring_efg`` / ``ring_dispersion`` /
       ``bond_anisotropy`` / ``electrostatic_efg`` / ``hbond_kernel`` /
       ``hbond_grid`` / ``secondary_structure`` / ``solvation`` /
@@ -97,7 +97,7 @@ class ArraySpec:
       ``topology`` / ``gromacs_runtime`` / ``geometry``. R analysis
       should read this column rather than regex over feature names
       (see learn/R/stage1_bmrb_dimension_independence.R — current
-      offender per the codex sidecar contract).
+      offender per the review sidecar contract).
     """
     stem: str                   # filename without .npy
     group: str                  # logical group (e.g. "biot_savart")
@@ -193,7 +193,7 @@ CATALOG: dict[str, ArraySpec] = {s.stem: s for s in [
     ArraySpec("mc_scalars",       "mcconnell", McConnellScalars,   6,    True,  "McConnell scalar sums + distances",
               mechanism="bond_anisotropy"),
 
-    # ── Rediscover substrate sidecars (h5-reader/src/rediscover) ─────────
+    # ── Rediscover substrate sidecars (trajectory reader/src/rediscover) ─────────
     # CSV rows carry identity/scalars; these NPYs carry 5-component T2 payloads
     # keyed by the corresponding source or aggregated CSV row order.
     ArraySpec("rediscover_ring_current_sources_target_T2",          "rediscover", np.ndarray, 5, False, "Rediscover ring-current source-row DFT target T2 payload",
@@ -221,7 +221,7 @@ CATALOG: dict[str, ArraySpec] = {s.stem: s for s in [
     ArraySpec("rediscover_mcconnell_aggregated_bare_kernel_T2",     "rediscover", np.ndarray, 5, False, "Rediscover McConnell aggregated-row producer bare-kernel T2 payload",
               is_feature=False, native_axis="rediscover_aggregated_row", irreps="2e", units="Angstrom^-3", sign_convention=_SHIELD_SIGN, tensor_rank=2, mechanism="bond_anisotropy"),
 
-    # ── broad_backbone (h5-reader/src/rediscover/BroadBackbone) — the composed
+    # ── broad_backbone (rediscovery extractors/BroadBackbone) — the composed
     # heterogeneous relationship: EVERY backbone atom × {rings, aniso bonds,
     # charge FIELD}. Two-kind carrier with the target-repeat FIX: the DFT target
     # lives ONCE per (atom,frame) on the aggregated row + these NPYs (keyed by
@@ -234,7 +234,7 @@ CATALOG: dict[str, ArraySpec] = {s.stem: s for s in [
     ArraySpec("broad_backbone_aggregated_field_local",     "rediscover", np.ndarray, 3, True,  "Broad-backbone local-frame Coulomb E-field (FF14SB, the field-not-mu feature), once per (atom,frame)",
               is_feature=True, native_axis="rediscover_aggregated_row", irreps="1e", units="e/Angstrom^2", tensor_rank=1, parity="odd", mechanism="charges"),
 
-    # -- all_atom_equivariant (h5-reader/src/rediscover/AllAtomEquivariant) --
+    # -- all_atom_equivariant (rediscovery extractors/AllAtomEquivariant) --
     # Corrected e3nn substrate: every atom, KD source geometry, and per-atom
     # producer feature payloads are in the molecular/lab frame. No per-atom
     # local frame is imposed; the ORCA/H5 frame alignment diagnostic in the
@@ -258,7 +258,7 @@ CATALOG: dict[str, ArraySpec] = {s.stem: s for s in [
     ArraySpec("all_atom_equivariant_aimnet2_embedding", "rediscover", np.ndarray, 256, True, "All-atom equivariant AIMNet2 256-d embedding, row-aligned with target rows",
               is_feature=True, native_axis="rediscover_target_row", irreps="256x0e", mechanism="aimnet2"),
 
-    # ── efg per_atom_feature (h5-reader/src/rediscover/EfgFeature) — APBS
+    # ── efg per_atom_feature (rediscovery extractors/EfgFeature) — APBS
     # solvated-PB EFG T2 -> DFT target T2. Both sidecars are in the same
     # library isometric T2 basis as DecomposeLibrary / SphericalTensor::Decompose:
     # [xy, yz, zz, xz, xx-yy]. Python applies only the frozen library->e3nn
@@ -268,7 +268,7 @@ CATALOG: dict[str, ArraySpec] = {s.stem: s for s in [
     ArraySpec("efg_target_T2",  "rediscover", np.ndarray, 5, False, "EFG per_atom_feature DFT target T2 payload, row-aligned with efg_feature_T2",
               is_feature=False, native_axis="rediscover_aggregated_row", irreps="2e", units="ppm", sign_convention=_SHIELD_SIGN, tensor_rank=2, mechanism="quantum_reference"),
 
-    # ── buckingham_efield per_atom_feature (h5-reader/src/rediscover/
+    # ── buckingham_efield per_atom_feature (rediscovery extractors/
     # BuckinghamEfield) — APBS solvated-PB E-field projected by the C++ spine
     # into the local backbone frame. The T0 fit reads scalar CSV columns
     # E_proj and E_mag only; this vector payload is emitted for audit and

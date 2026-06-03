@@ -44,7 +44,7 @@
 // per-path contract is spelled out at AssembleTripeptide below.
 //
 // The pre-2026-05-11 element-pattern + threshold-rejection design is
-// retired; see spec/plan/larsen-residue-design-2026-05-11.md.
+// retired; see design note.
 //
 
 #include "Types.h"

@@ -101,7 +101,7 @@ class ShieldingTensor(SphericalTensor):
     shielding (bs_*, hm_*, mc_*, pq_*, disp_*, hbond_*, ringchi_*,
     coulomb_shielding) is in the kernel's native unit (ppm·T/nA, Å⁻¹,
     Å⁻³, Å⁻⁵, Å⁻⁶, V/Å²) — calibration multiplies by the relevant
-    parameter to map to ppm. See OBJECT_MODEL.md drift-table section.
+    parameter to map to ppm. See object model drift-table section.
     """
     pass
 
@@ -118,7 +118,7 @@ class EFGTensor:
     T2 (5 real-spherical-tesseral components m=-2..+2) carries signal.
 
     Re-typed from a 9-component SphericalTensor subclass to a standalone
-    5-component class on 2026-05-18 (codex review R2 M1 expansion). The
+    5-component class on 2026-05-18 (review review R2 M1 expansion). The
     old shape emitted 4 always-zero channels per atom; the new shape
     saves storage AND signals the physics correctly to e3nn / MACE /
     NequIP downstream consumers via the ``1x2e`` Irreps declaration.

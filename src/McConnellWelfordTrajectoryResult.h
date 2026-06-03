@@ -6,7 +6,7 @@
 //
 // Source: `ConformationAtom::mc_shielding_contribution` (units = Å⁻³,
 // full McConnell asymmetric non-traceless three-term form — see
-// PATTERNS.md Lesson 19; T0 = (3cos²θ-1)/r³ is meaningful). McConnellResult
+// project conventions Lesson 19; T0 = (3cos²θ-1)/r³ is meaningful). McConnellResult
 // is unconditionally attached in `PerFrameExtractionSet`, so the dep
 // is enforced via `Dependencies()`.
 //
@@ -18,7 +18,7 @@
 // source field; this Welford rolls up the same channels.
 // T0 / T1[3] / T2[5] / |T2| / delta/rate variants follow BS exactly.
 // Per PATTERNS Lesson 25 (Export Everything Upstream). See
-// spec/plan/welford-data-shape-design-2026-05-17.md.
+// design note.
 //
 
 #include "TrajectoryResult.h"

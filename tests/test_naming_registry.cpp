@@ -39,7 +39,7 @@ TEST(NamingRegistryTest, HisToAmberProducesVariants) {
     EXPECT_EQ(reg.ResolveForTool("HIS", ToolContext::Amber, "doubly"),  "HIP");
 }
 
-// HisToCharmmProducesVariants test deleted 2026-05-06 (codex D1):
+// HisToCharmmProducesVariants test deleted 2026-05-06 (review D1):
 // `ToolContext::Charmm` was retired with InitialiseCharmmContext().
 // CHARMM-input recognition remains via ToCanonical (HSD/HSE/HSP -> HIS,
 // CYS2 -> CYS, ASPP -> ASP, GLUP -> GLU); the test below
@@ -152,7 +152,7 @@ TEST(NamingApplicatorTest, RulesAreLoaded) {
     const auto& app = GlobalNamingApplicator();
     // ~20 rules expected after the 2026-05-06 install across the
     // Amber/pdb2gmx-RTP + Markley1998 vocabularies. (The 3 historic
-    // CharmmLegacy rules were removed 2026-05-06 with codex Finding 2
+    // CharmmLegacy rules were removed 2026-05-06 with review Finding 2
     // — no active load path tags inputs CharmmLegacy, fleet_amber
     // fixtures don't contain HN/OT1/OT2.) The exact count is brittle;
     // just assert a substantive load.
@@ -423,7 +423,7 @@ TEST(NamingApplicatorIdempotency, LoadTimeToleranceAcceptsVariantExtensionAtoms)
     // (unresolved). Loaders cannot know the resolved tautomer until
     // ResolveProtonationStates fires, so the oracle accepts the union
     // of variant-extension atoms permissively. The variant-strict
-    // checks (codex Finding 5) are exercised in the per-variant tests
+    // checks (review Finding 5) are exercised in the per-variant tests
     // below (HieRejectsHd1, HipAcceptsHd1AndHe2, AshAcceptsHd2,
     // GlhAcceptsHe2).
     struct VariantCase {
@@ -469,7 +469,7 @@ TEST(NamingApplicatorIdempotency, LoadTimeToleranceAcceptsVariantExtensionAtoms)
 
 
 // ----------------------------------------------------------------------------
-// Variant-aware canonicality oracle — codex Finding 5
+// Variant-aware canonicality oracle — review Finding 5
 //
 // IsCanonical is variant-aware AFTER protonation resolution. Under
 // variant_index >= 0 (resolved), only the variant's true atoms pass;
@@ -542,7 +542,7 @@ TEST(NamingApplicatorVariantAwareDeathTest, HieRejectsHd1) {
 
 
 // ----------------------------------------------------------------------------
-// Variant-aware DELETION overlay — codex Finding F5 (2026-05-06)
+// Variant-aware DELETION overlay — review Finding F5 (2026-05-06)
 //
 // Under a resolved deletion variant (variant_index >= 0 mapping to a
 // variant that REMOVES atoms from the base chain inventory), the
@@ -590,7 +590,7 @@ TEST(NamingApplicatorVariantAwareDeletionDeathTest, LynRejectsHz1) {
     // LYN (variant_index = 0): canonical hydrogens are HZ2+HZ3 only.
     // HZ1 is NOT canonical under resolved LYN.
     //
-    // After the codex round-2 fix (2026-05-06), the death can come via
+    // After the review round-2 fix (2026-05-06), the death can come via
     // EITHER path (architecturally equivalent):
     //   (a) Rule-level: LysAmmoniumHzPassThrough's variant gate
     //       (c.variant_index < 0) blocks the rule from firing. Map
@@ -716,7 +716,7 @@ TEST(NamingApplicatorOracle, RecognisesChainAtoms) {
 TEST(NamingApplicatorOracle, RecognisesCapAtoms) {
     const auto& app = GlobalNamingApplicator();
     // H2N is intentionally NOT in this set: removed 2026-05-06 with
-    // CharmmLegacy cleanup (codex Finding 2). Any reappearance of H2N
+    // CharmmLegacy cleanup (review Finding 2). Any reappearance of H2N
     // in a future load path needs a concrete source tag and rule.
     for (const std::string& nm : {"H1", "H2", "H3", "OXT", "HXT"}) {
         auto ctx = MakeContext(nm, AminoAcid::ALA,
@@ -767,10 +767,10 @@ TEST(NamingApplicatorResolve, MultipleRulesAgreeingReturnsSharedOutput) {
     // path returns the shared output.
     //
     // The production rule set does not currently reach this branch
-    // (see NamingRegistry.cpp::Resolve() codex Finding 6 comment); the
+    // (see NamingRegistry.cpp::Resolve() review Finding 6 comment); the
     // test-only `CustomRules` constructor is the canonical exercise.
     //
-    // Codex Finding D3 (2026-05-06): the test-only constructor is
+    // review Finding D3 (2026-05-06): the test-only constructor is
     // private; reach it through nmr::test::NamingApplicatorTestAccess
     // (test_naming_applicator_access.h). Production code cannot reach
     // this path.
@@ -818,7 +818,7 @@ TEST_F(NamingApplicatorDeathTest, UnknownAtomNameAborts) {
     const auto& app = GlobalNamingApplicator();
     // An atom name no rule matches AND not present in the canonicality
     // oracle. ZZZZ is fictional, residue ALA, no source rules match.
-    // Source must be a real loader tag (codex CC2, 2026-05-06):
+    // Source must be a real loader tag (review CC2, 2026-05-06):
     // NamingSource::Unknown is rejected at Apply() entry, so the
     // FailUnresolved branch is exercised under a real source.
     auto ctx = MakeContext("ZZZZ", AminoAcid::ALA,
@@ -828,7 +828,7 @@ TEST_F(NamingApplicatorDeathTest, UnknownAtomNameAborts) {
                  "no rule applies and input is not canonical");
 }
 
-// Codex Finding CC2 (2026-05-06): NamingSource::Unknown at entry is a
+// review Finding CC2 (2026-05-06): NamingSource::Unknown at entry is a
 // loader bug. The applicator rejects it before any rule iterates.
 TEST_F(NamingApplicatorDeathTest, UnknownSourceAtEntryAborts) {
     const auto& app = GlobalNamingApplicator();
@@ -845,7 +845,7 @@ TEST_F(NamingApplicatorDeathTest, UnknownSourceAtEntryAborts) {
 
 
 // ----------------------------------------------------------------------------
-// Post-resolution validator — codex round-2, 2026-05-06
+// Post-resolution validator — review round-2, 2026-05-06
 //
 // Architectural contract:
 //   Applies()  may recognise NON-canonical input (rules exist to repair).

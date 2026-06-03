@@ -2,7 +2,7 @@
 //
 // TrajectoryResult: base class for per-trajectory modular calculators.
 // Parallel to ConformationResult at conformation scope. See
-// OBJECT_MODEL.md (trajectory-scope) and PATTERNS.md §14 for the
+// object model (trajectory-scope) and project conventions §14 for the
 // pattern; see BsWelfordTrajectoryResult for the canonical exemplar.
 //
 // State discipline: Welford-style per-atom accumulators live in named

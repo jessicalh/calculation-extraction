@@ -108,7 +108,7 @@ public:
     // `conf.ring_geometries[ri]` (populated by GeometryResult).
     // PerFrameExtractionSet requires both; declaring deps here means
     // non-canonical configs fail loud at Phase 4 instead of crashing
-    // at the first frame's Compute (codex round 1 2026-05-21 MED).
+    // at the first frame's Compute (review round 1 2026-05-21 MED).
     std::vector<std::type_index> Dependencies() const override;
 
     static std::unique_ptr<RingNeighbourhoodTrajectoryStats> Create(

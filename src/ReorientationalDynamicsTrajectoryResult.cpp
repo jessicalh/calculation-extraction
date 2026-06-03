@@ -28,7 +28,7 @@ constexpr double kNaN = std::numeric_limits<double>::quiet_NaN();
 
 // Optimal rotation aligning `current` onto `reference` (both 3xM point
 // clouds, one point per entry), reflection-corrected. Cloned from
-// RmsdTrackingTrajectoryResult::KabschRmsd (PATTERNS.md 17), returning the
+// RmsdTrackingTrajectoryResult::KabschRmsd (project conventions 17), returning the
 // rotation R instead of the RMSD: R rotates the centred current frame onto
 // the reference, so a bond vector in the current frame becomes R * v in the
 // reference (body) frame. M < 3 is rotationally underdetermined -> identity.
@@ -94,7 +94,7 @@ ReorientationalDynamicsTrajectoryResult::Create(const TrajectoryProtein& tp) {
 
     // Clamp to >= 1: a misconfigured dynamics_n_lags <= 0 must not size the
     // TCF accumulators to zero (Finalize would then read an empty vector).
-    // codex review 2026-05-29.
+    // review review 2026-05-29.
     const double n_lags_raw = CalculatorConfig::Get("dynamics_n_lags");
     const std::size_t n_lags =
         (n_lags_raw >= 1.0) ? static_cast<std::size_t>(n_lags_raw) : 1;
@@ -232,7 +232,7 @@ void ReorientationalDynamicsTrajectoryResult::Finalize(TrajectoryProtein& tp,
                 // The (1-S^2) term in J vanishes regardless, but tau_e must be
                 // finite (not the skipped NaN) so the relaxation layer runs
                 // for rigid vectors -- exactly where relaxation is best
-                // defined (codex review 2026-05-29).
+                // defined (review review 2026-05-29).
                 tau_e_[v] = 0.0;
             }
         }
@@ -294,7 +294,7 @@ void ReorientationalDynamicsTrajectoryResult::Finalize(TrajectoryProtein& tp,
     // and "J(omega_H + omega_N)" is the LOW one |omega_H| - |omega_N|. Using
     // magnitudes for the combinations silently swaps the 1x/6x spectral
     // weights and inflates the steady-state NOE toward 1 (~0.89 instead of
-    // the correct ~0.82-0.84). Caught by codex review 2026-05-29.
+    // the correct ~0.82-0.84). Caught by review review 2026-05-29.
     const double wH_signed = GAMMA_H   * B0;          // > 0
     const double wN_signed = GAMMA_N15 * B0;          // < 0 for 15N
     const double wH    = std::abs(wH_signed);         // |omega_H|

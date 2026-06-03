@@ -209,7 +209,7 @@ void WaterFieldWelfordTrajectoryResult::Finalize(TrajectoryProtein& tp,
 
     // frame_index_range from source-attached subset only — partial-attach
     // runs shouldn't advertise a range covering absent frames that never
-    // fed the Welford. Per R3 codex F4 2026-05-18.
+    // fed the Welford. Per R3 review F4 2026-05-18.
     const auto& fidx = traj.FrameIndices();
     std::vector<std::size_t> attached_fidx;
     attached_fidx.reserve(source_attached_per_frame_.size());
@@ -411,7 +411,7 @@ void WaterFieldWelfordTrajectoryResult::WriteH5Group(
     //   rate_units / rate_m2_units — dxdt / dxdt-m2 units
     //   d/ad/sd/dx/rms — channel getters
     //
-    // Codex 2026-05-18: the `sq_m2_units` field replaces a fragile
+    // review 2026-05-18: the `sq_m2_units` field replaces a fragile
     // string-dispatch lookup ("is base == 'efg_t0'?" etc.) that fell
     // through to "dimensionless" for the count channels — semantically
     // OK by luck but a typed lookup chain instead of an explicit unit.

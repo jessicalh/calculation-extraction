@@ -129,7 +129,7 @@ std::unique_ptr<DsspResult> DsspResult::Compute(ProteinConformation& conf) {
             if (it == res_lookup.end()) continue;
 
             auto& dr = result->residues_[it->second];
-            dr.observed = true;  // Codex review 2026-05-19: distinguish
+            dr.observed = true;  // review review 2026-05-19: distinguish
                                  // mapped from default-coil for honest
                                  // downstream SS classification.
             char ss = static_cast<char>(dssp_res.type());

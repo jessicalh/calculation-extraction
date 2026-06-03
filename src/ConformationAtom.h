@@ -334,7 +334,7 @@ public:
     // Methods accumulate (feedback_methods_accumulate): these fields
     // coexist with HBondResult's kernel-form output for the
     // amide-H/backbone-O subset. Per-atom-type residuals between the
-    // two are themselves thesis-reportable.
+    // two are themselves reportable.
     //
     // larsen_hbond_shielding_tensor is the SUM over all contribution
     // classes that apply at this atom (1°HB + 2°HB + 1°HαB + 2°HαB) per
@@ -343,7 +343,7 @@ public:
     // (already rotated from canonical donor frame via
     // RotateTensorToProteinLabFrame).
     //
-    // Pattern 11 (PATTERNS.md): every tensor is stored as BOTH Mat3
+    // Pattern 11 (project conventions): every tensor is stored as BOTH Mat3
     // AND SphericalTensor — every Mat3 below has a `*_spherical`
     // companion. Downstream consumers never decompose at point of use.
     Mat3            larsen_hbond_shielding_tensor    = Mat3::Zero();
