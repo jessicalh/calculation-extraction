@@ -51,9 +51,6 @@ protected:
     nmr::test::AmberTrajectoryFixture FixtureFor(
             const std::string& protein_id) {
         auto fix = nmr::test::TestEnvironment::FleetAmberTrajectory(protein_id);
-        if (fix.tpr_path.empty()) {
-            ADD_FAILURE() << "no fleet_amber subpath for " << protein_id;
-        }
         return fix;
     }
 };

@@ -427,6 +427,11 @@ find_library(MOPAC_LIB
     HINTS "${NMR_MOPAC_ROOT}"
     PATH_SUFFIXES lib lib64
     DOC "MOPAC shared library")
+find_program(MOPAC_EXECUTABLE
+    NAMES mopac
+    HINTS "${NMR_MOPAC_ROOT}"
+    PATH_SUFFIXES bin
+    DOC "MOPAC executable used by runtime tests")
 if(NOT MOPAC_INCLUDE OR NOT EXISTS "${MOPAC_INCLUDE}/mopac.h")
     message(FATAL_ERROR "MOPAC headers not found. Set MOPAC_INCLUDE or "
                         "NMR_MOPAC_INCLUDE.")
@@ -438,6 +443,9 @@ if(NOT MOPAC_LIB OR NOT EXISTS "${MOPAC_LIB}")
                         "Set MOPAC_LIB or NMR_MOPAC_LIB.")
 endif()
 message(STATUS "MOPAC: ${MOPAC_LIB}")
+if(MOPAC_EXECUTABLE)
+    message(STATUS "MOPAC executable: ${MOPAC_EXECUTABLE}")
+endif()
 
 # ============================================================================
 # Header-only external libraries
@@ -1046,6 +1054,36 @@ if(NOT "$ENV{LD_LIBRARY_PATH}" STREQUAL "")
 endif()
 set(NMR_TEST_ENVIRONMENT "LD_LIBRARY_PATH=${_nmr_test_ld_library_path}")
 
+set(_nmr_cifpp_data_candidates)
+if(DEFINED ENV{LIBCIFPP_DATA_DIR})
+    list(APPEND _nmr_cifpp_data_candidates "$ENV{LIBCIFPP_DATA_DIR}")
+endif()
+list(APPEND _nmr_cifpp_data_candidates
+    "/usr/share/libcifpp"
+    "/usr/local/share/libcifpp"
+)
+find_file(NMR_CIFPP_MMCIF_DICTIONARY
+    NAMES mmcif_pdbx.dic mmcif_pdbx_v50.dic
+    HINTS ${_nmr_cifpp_data_candidates}
+    DOC "mmCIF dictionary used by cif++ PDB parsing"
+)
+if(NMR_CIFPP_MMCIF_DICTIONARY)
+    set(_nmr_cifpp_runtime_data_dir "${CMAKE_BINARY_DIR}/cifpp-data")
+    file(MAKE_DIRECTORY "${_nmr_cifpp_runtime_data_dir}")
+    configure_file("${NMR_CIFPP_MMCIF_DICTIONARY}"
+                   "${_nmr_cifpp_runtime_data_dir}/mmcif_pdbx.dic"
+                   COPYONLY)
+    list(APPEND NMR_TEST_ENVIRONMENT
+        "LIBCIFPP_DATA_DIR=${_nmr_cifpp_runtime_data_dir}")
+endif()
+if(MOPAC_EXECUTABLE)
+    list(APPEND NMR_TEST_ENVIRONMENT "NMR_MOPAC=${MOPAC_EXECUTABLE}")
+endif()
+# Run GoogleTest discovery and test bodies through the same environment;
+# CMake 3.22's PRE_TEST path does not preserve multi-entry ENVIRONMENT lists.
+set(NMR_TEST_EXECUTOR "${CMAKE_COMMAND}" "-E" "env")
+list(APPEND NMR_TEST_EXECUTOR ${NMR_TEST_ENVIRONMENT})
+
 # ----------------------------------------------------------------------------
 # nmr_test(<NAME>
 #     SOURCES <file.cpp> ...    test sources beyond the universal two
@@ -1077,6 +1115,8 @@ macro(nmr_test NAME)
     target_compile_definitions(${NAME} PRIVATE
         NMR_TEST_DATA_DIR="${CMAKE_SOURCE_DIR}/tests/data"
     )
+    set_property(TARGET ${NAME} PROPERTY
+        CROSSCOMPILING_EMULATOR ${NMR_TEST_EXECUTOR})
 
     list(FIND _NT_LINK "highfive" _hf_idx)
     if(NOT _hf_idx EQUAL -1)
@@ -1102,14 +1142,11 @@ macro(nmr_test NAME)
         gtest_discover_tests(${NAME}
             DISCOVERY_MODE PRE_TEST
             PROPERTIES
-                ENVIRONMENT "${NMR_TEST_ENVIRONMENT}"
                 LABELS "${_NT_LABELS}"
         )
     else()
         gtest_discover_tests(${NAME}
             DISCOVERY_MODE PRE_TEST
-            PROPERTIES
-                ENVIRONMENT "${NMR_TEST_ENVIRONMENT}"
         )
     endif()
 endmacro()
@@ -1311,10 +1348,11 @@ target_link_libraries(string_barrier_tests PRIVATE
     GTest::gtest
     GTest::gtest_main
 )
+set_property(TARGET string_barrier_tests PROPERTY
+    CROSSCOMPILING_EMULATOR ${NMR_TEST_EXECUTOR})
 gtest_discover_tests(string_barrier_tests
     DISCOVERY_MODE PRE_TEST
     PROPERTIES
-        ENVIRONMENT "${NMR_TEST_ENVIRONMENT}"
         LABELS fast
 )
 
