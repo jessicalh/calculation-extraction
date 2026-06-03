@@ -2,6 +2,7 @@
 .git/
 .git-old/
 .cache/
+.release-audit/
 CMakeUserPresets.json
 
 build*/
