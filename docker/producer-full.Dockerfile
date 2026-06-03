@@ -6,6 +6,9 @@
 ARG NMR_BASE_IMAGE=nmr-shielding-producer-deps:local
 ARG NMR_PREFIX=/opt/nmr-shielding
 ARG NMR_DEPS_PREFIX=/opt/nmr-shielding/deps
+ARG NMR_BIOLOGY_TOOLS_PREFIX=/opt/nmr-shielding/deps/biology-tools
+ARG NMR_MOLPROBITY_PREFIX=/opt/nmr-shielding/deps/molprobity
+ARG MAMBA_ROOT_PREFIX=/opt/nmr-shielding/deps/micromamba
 
 FROM ${NMR_BASE_IMAGE} AS build
 ARG NMR_PREFIX
@@ -54,6 +57,9 @@ RUN sed -i '1s@^#!.*python3$@#!/usr/bin/python3@' "${NMR_PREFIX}/bin/nmr-tensorc
 FROM ${NMR_BASE_IMAGE} AS runtime
 ARG NMR_PREFIX
 ARG NMR_DEPS_PREFIX
+ARG NMR_BIOLOGY_TOOLS_PREFIX
+ARG NMR_MOLPROBITY_PREFIX
+ARG MAMBA_ROOT_PREFIX
 
 COPY --from=build ${NMR_PREFIX}/bin/ ${NMR_PREFIX}/bin/
 COPY --from=build ${NMR_PREFIX}/share/ ${NMR_PREFIX}/share/
@@ -65,9 +71,51 @@ RUN if [ -f /etc/ld.so.conf.d/nmr-shielding-deps.conf ]; then \
 COPY docker/nmr-container-entrypoint.sh /usr/local/bin/nmr-container-entrypoint
 RUN chmod +x /usr/local/bin/nmr-container-entrypoint
 
+COPY docker/biology-tools.env.yml /tmp/nmr-biology-tools.env.yml
+COPY docker/molprobity.env.yml /tmp/nmr-molprobity.env.yml
+
+RUN set -eux; \
+    curl -Ls https://micro.mamba.pm/api/micromamba/linux-64/latest \
+      | tar -xj -C /usr/local/bin --strip-components=1 bin/micromamba; \
+    MAMBA_ROOT_PREFIX="${MAMBA_ROOT_PREFIX}" micromamba create -y \
+      -p "${NMR_MOLPROBITY_PREFIX}" -f /tmp/nmr-molprobity.env.yml; \
+    MAMBA_ROOT_PREFIX="${MAMBA_ROOT_PREFIX}" micromamba create -y \
+      -p "${NMR_BIOLOGY_TOOLS_PREFIX}" -f /tmp/nmr-biology-tools.env.yml; \
+    for tool in \
+      molprobity.ramalyze \
+      molprobity.rotalyze \
+      molprobity.cbetadev \
+      molprobity.cablam \
+      molprobity.mp_validate_bonds \
+      molprobity.clashscore \
+      molprobity.clashscore2 \
+      molprobity.molprobity \
+      mmtbx.reduce2 \
+      mmtbx.probe2; do \
+        test -x "${NMR_MOLPROBITY_PREFIX}/bin/${tool}"; \
+        ln -sf "${NMR_MOLPROBITY_PREFIX}/bin/${tool}" "${NMR_PREFIX}/bin/${tool}"; \
+    done; \
+    for tool in obabel pdb2pqr pdbfixer mdconvert; do \
+        test -x "${NMR_BIOLOGY_TOOLS_PREFIX}/bin/${tool}"; \
+        ln -sf "${NMR_BIOLOGY_TOOLS_PREFIX}/bin/${tool}" "${NMR_PREFIX}/bin/${tool}"; \
+    done; \
+    ln -sf "${NMR_BIOLOGY_TOOLS_PREFIX}/bin/python" "${NMR_PREFIX}/bin/nmr-biology-python"; \
+    ln -sf "${NMR_MOLPROBITY_PREFIX}/bin/python" "${NMR_PREFIX}/bin/nmr-molprobity-python"; \
+    "${NMR_BIOLOGY_TOOLS_PREFIX}/bin/python" -c "import Bio, MDAnalysis, mdtraj, pdbfixer, rdkit, openmm, parmed; import openff.toolkit, openff.interchange"; \
+    test -x "${NMR_MOLPROBITY_PREFIX}/bin/molprobity.ramalyze"; \
+    MAMBA_ROOT_PREFIX="${MAMBA_ROOT_PREFIX}" micromamba clean -a -y; \
+    rm -rf "${MAMBA_ROOT_PREFIX}/pkgs" /tmp/nmr-biology-tools.env.yml /tmp/nmr-molprobity.env.yml
+
+COPY tools/molprobity_validate.py ${NMR_PREFIX}/bin/nmr-molprobity-validate
+RUN chmod +x "${NMR_PREFIX}/bin/nmr-molprobity-validate"
+
 ENV PATH="${NMR_PREFIX}/bin:${NMR_DEPS_PREFIX}/gromacs/bin:${NMR_DEPS_PREFIX}/orca:${NMR_DEPS_PREFIX}/chem-env/bin:${PATH}" \
     NMR_PREFIX="${NMR_PREFIX}" \
     NMR_DEPS_PREFIX="${NMR_DEPS_PREFIX}" \
+    NMR_BIOLOGY_TOOLS_PREFIX="${NMR_BIOLOGY_TOOLS_PREFIX}" \
+    NMR_MOLPROBITY_PREFIX="${NMR_MOLPROBITY_PREFIX}" \
+    NMR_BIOLOGY_PYTHON="${NMR_BIOLOGY_TOOLS_PREFIX}/bin/python" \
+    MOLPROBITY_BIN="${NMR_MOLPROBITY_PREFIX}/bin" \
     NMR_TOOLS_TOML=/etc/nmr-shielding/nmr_tools.toml \
     NMR_NVRTC_LIB_DIR="${NMR_DEPS_PREFIX}/nvidia/cu13/lib" \
     NMR_GMX="${NMR_DEPS_PREFIX}/gromacs/bin/gmx_mpi" \

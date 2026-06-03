@@ -4,6 +4,7 @@
 .cache/
 .release-audit/
 CMakeUserPresets.json
+*.orig
 
 build*/
 Testing/
